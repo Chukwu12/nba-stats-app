@@ -18,22 +18,38 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Current Rappers</h1>
-    <ul class="rappers">
-    <% for(let i=0; i < info.length; i++) {%>
-        <li class="rapper">
-            <span><%= info[i].stageName %></span>
-            <span><%= info[i].birthName %></span>
-            <span><%= info[i].likes %></span>
-            <span class='fa fa-thumbs-up'></span>
-            <span class='fa fa-trash'></span>
-        </li>
-    <% } %>
-    </ul>
-
-    <h2>Add A Rapper:</h2>
-
-    <form action="/addRapper" method="POST">
+    <section>
+        <div class="container">
+            <div class="form-box">
+                <h1>Basketball Team <i class="fa-solid fa-basketball fa-bounce"></i></h1>
+                <div class="basketball-content">
+                    <!-- Modify action attribute to point to the route where form data will be submitted -->
+                    <form action="/findTeams" method="POST">
+                        <!-- Add name attribute to input field -->
+                        <input type="text" placeholder="team Name" name="teamName">
+                        <button>click me</button>
+                    </form>
+                </div>
+                <h2>Fun Facts:</h2>
+                <!-- Render results using EJS -->
+                <ul class="rappers">
+                    <% if(info && info.length > 0) { %>
+                        <% info.forEach(function(team) { %>
+                            <li class="teams">
+                                <span><%= team.championships %></span>
+                                <span><%= team.Most3s %></span>
+                                <span><%= team.bestRecord %></span>
+                            </li>
+                        <% }); %>
+                    <% } else { %>
+                        <li>No data available</li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <form action="/findTeams" method="POST">
         <input type="text" placeholder="Stage Name" name="stageName">
         <input type="text" placeholder="Birth Name" name="birthName">
         <input type="submit">
