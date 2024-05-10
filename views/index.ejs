@@ -9,15 +9,6 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
     <section>
         <div class="container">
             <div class="form-box">
@@ -26,23 +17,21 @@
                     <!-- Modify action attribute to point to the route where form data will be submitted -->
                     <form action="/findTeams" method="POST">
                         <!-- Add name attribute to input field -->
-                        <input type="text" placeholder="team Name" name="teamName">
-                        <button>click me</button>
+                        <input type="text" placeholder="Enter Team Name" name="teamName">
+                        <button>Sumbit</button>
                     </form>
                 </div>
-                <h2>Fun Facts:</h2>
+
                 <!-- Render results using EJS -->
-                <ul class="rappers">
-                    <% if(info && info.length > 0) { %>
-                        <% info.forEach(function(team) { %>
-                            <li class="teams">
-                                <span><%= team.championships %></span>
-                                <span><%= team.Most3s %></span>
-                                <span><%= team.bestRecord %></span>
-                            </li>
-                        <% }); %>
+                <ul class="teams">
+                    <% if (info) { %>
+                        <h2>Team Details</h2>
+                        <p>Team Name: <%= info.teamName %></p>
+                        <p>Championships: <%= info.championships %></p>
+                        <p>Most 3s: <%= info.Most3s %></p>
+                        <p>Best Record: <%= info.bestRecord %></p>
                     <% } else { %>
-                        <li>No data available</li>
+                        <p>Team not found.</p>
                     <% } %>
                 </ul>
             </div>

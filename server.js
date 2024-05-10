@@ -5,6 +5,23 @@ const PORT = 2121
 require('dotenv').config()
 
 
+
+let db,
+    collection, // Define the collection variable
+    dbConnectionStr = process.env.DB_STRING,
+    dbName = 'basketball-teams'
+
+
+    MongoClient.connect(dbConnectionStr)
+    .then(client => {
+        console.log(`Connected to ${dbName} Database`);
+        db = client.db(dbName);
+        collection = db.collection(dbName);
+    })
+    .catch(error => console.error(error));
+
+
+
 const basketballTeam = {
     'Atlanta Hawks': {
         'championships': 0,
@@ -164,17 +181,26 @@ const basketballTeam = {
 };
 
 
-let db,
-    dbConnectionStr = process.env.DB_STRING,
-    dbName = 'basketball-teams'
 
+    // function insertBasketballTeams() {
+    //     // Insert each team into the collection
+    //     for (const [teamName, teamInfo] of Object.entries(basketballTeam)) {
+    //         collection.insertOne({
+    //            teamName,
+    //             teamInfo
+    //        })
+    //        .then(result => {
+    //         console.log(`Inserted ${teamName} into the collection`);
+    //     })
+    //     .catch(error => console.error(error));
+    // }
+    // }
+       
+       
+    //    // Call the function to insert basketball teams
+    //    insertBasketballTeams();
+       
 
-MongoClient.connect(dbConnectionStr)
-    .then(client => {
-        console.log(`Connected to ${dbName} Database`)
-       db = client.db(dbName)
-    })
-    
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
@@ -182,49 +208,54 @@ app.use(express.json())
 
 
 app.get('/', (request, response) => {
-    db.collection('basketball-teams').find().toArray() // Corrected method chaining
-        .then(data => {
-            response.render('index.ejs', { info: data }); // Pass data instead of info
+    response.render('index.ejs', { info: null });
+});
+
+
+app.post('/findTeams', (request, response) => {
+    const teamName = request.body.teamName.toLowerCase(); // Convert user input to lowercase
+    collection.findOne({ teamName: { $regex: new RegExp(teamName, 'i') } }) // Use case-insensitive regex search
+        .then(team => {
+            if (team) {
+                response.render('index.ejs', { info: team });
+            } else {
+                response.render('index.ejs', { info: null }); // Team not found
+            }
         })
         .catch(error => console.error(error));
 });
 
-app.post('/findTeams', (request, response) => {
-    db.collection('basketball-teams').insertOne({teamName: request.body.teamName,
-    })
-    .then(result => {
-        console.log('team added')
-        response.redirect('/')
-    })
-    .catch(error => console.error(error))
-})
 
-app.put('/addOneLike', (request, response) => {
-    db.collection('rappers').updateOne({stageName: request.body.stageNameS, birthName: request.body.birthNameS,likes: request.body.likesS},{
-        $set: {
-            likes:request.body.likesS + 1
-          }
-    },{
-        sort: {_id: -1},
-        upsert: true
-    })
-    .then(result => {
-        console.log('Added One Like')
-        response.json('Like Added')
-    })
-    .catch(error => console.error(error))
 
-})
 
-app.delete('/deleteRapper', (request, response) => {
-    db.collection('rappers').deleteOne({stageName: request.body.stageNameS})
-    .then(result => {
-        console.log('Rapper Deleted')
-        response.json('Rapper Deleted')
-    })
-    .catch(error => console.error(error))
 
-})
+
+// app.put('/addOneLike', (request, response) => {
+//     db.collection('rappers').updateOne({stageName: request.body.stageNameS, birthName: request.body.birthNameS,likes: request.body.likesS},{
+//         $set: {
+//             likes:request.body.likesS + 1
+//           }
+//     },{
+//         sort: {_id: -1},
+//         upsert: true
+//     })
+//     .then(result => {
+//         console.log('Added One Like')
+//         response.json('Like Added')
+//     })
+//     .catch(error => console.error(error))
+
+// })
+
+// app.delete('/deleteRapper', (request, response) => {
+//     db.collection('rappers').deleteOne({stageName: request.body.stageNameS})
+//     .then(result => {
+//         console.log('Rapper Deleted')
+//         response.json('Rapper Deleted')
+//     })
+//     .catch(error => console.error(error))
+
+// })
 
 app.listen(process.env.PORT || PORT, ()=>{
     console.log(`Server running on port ${PORT}`)

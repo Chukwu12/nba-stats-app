@@ -4,6 +4,18 @@
     box-sizing: border-box;
   }
 
+  button{
+    height: 30px;
+    width: 60px;
+    border-radius: 25px;
+    font-weight: 600;
+    background-color: aliceblue;
+  }
+
+  input{
+    height: 25px;
+  }
+
 
 section{
     background: url(/img/basketball-img.jpg) no-repeat;
@@ -65,4 +77,12 @@ h2{
     100% {
         transform: translateY(-30px);
     }
+}
+
+.teams{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 30px; 
 }
