@@ -1,2 +1,4 @@
 node_modules
 .env
+
+DB_STRING = 'mongodb+srv://fabb7193:Fb6xjGtQ7rPsYJu9@cluster1.q4y0che.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1'
