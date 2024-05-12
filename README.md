@@ -31,14 +31,19 @@ CSS
 ### Setup and Installation
 1.Clone the repository:
 git clone <repository-url>
+<br>
 2.Navigate to the project directory:
 cd basketball-team-project
+<br>
 3. Install dependencies:
 npm install
+<br>
 4.Set up environment variables:Create a .env file in the project root directory and add the following:
 DB_STRING=<your-mongodb-connection-string>
+<br>
 5. Start the server:
 npm start
+<br>
 6. Access the application in your web browser at http://localhost:2121
 
 ### Usage
