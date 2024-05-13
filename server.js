@@ -177,7 +177,13 @@ const basketballTeam = {
         'championships': 'unknown',
         'Most 3s': 'unknown',
         'best Record': 'unknown' 
+    },
+    'MyTeam': {
+        'championships': 6,
+        'Most 3s': 'Okechukwu Egeruoh',
+        'best Record': '77-5'
     }
+
 };
 
 
