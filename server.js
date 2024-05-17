@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const MongoClient = require('mongodb').MongoClient
-const PORT = 2121
+const PORT = process.env.PORT || 2121;
 require('dotenv').config()
 
 
@@ -219,7 +219,8 @@ app.get('/', (request, response) => {
 
 
 app.post('/findTeams', (request, response) => {
-    const teamName = request.body.teamName.toLowerCase(); // Convert user input to lowercase
+    
+    const {teamName, championships, Most3s, bestRecord}  = request.body.teamName.toLowerCase(); // Convert user input to lowercase
     collection.findOne({ teamName: { $regex: new RegExp(teamName, 'i') } }) // Use case-insensitive regex search
         .then(team => {
             if (team) {
