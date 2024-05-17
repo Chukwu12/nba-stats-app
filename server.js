@@ -220,7 +220,7 @@ app.get('/', (request, response) => {
 
 app.post('/findTeams', (request, response) => {
     
-    const {teamName, championships, Most3s, bestRecord}  = request.body.teamName.toLowerCase(); // Convert user input to lowercase
+    const teamName = request.body.teamName.toLowerCase(); // Convert user input to lowercase
     collection.findOne({ teamName: { $regex: new RegExp(teamName, 'i') } }) // Use case-insensitive regex search
         .then(team => {
             if (team) {

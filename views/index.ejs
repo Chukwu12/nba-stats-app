@@ -18,14 +18,14 @@
                     <form action="/findTeams" method="POST">
                         <!-- Add name attribute to input field -->
                         <input type="text" placeholder="Enter Team Name" name="teamName">
-                        <button>Sumbit</button>
+                        <button type="submit">Search</button>
                     </form>
                 </div>
 
                 <!-- Render results using EJS -->
                 <ul class="teams">
                     <% if (info) { %>
-                        <h2>Team Details</h2>
+                        <h2>Teams Information</h2>
                         <p>Team Name: <%= info.teamName %></p>
                         <p>Championships: <%= info.championships %></p>
                         <p>Most 3s: <%= info.Most3s %></p>
@@ -38,13 +38,6 @@
         </div>
     </section>
     
-    <form action="/findTeams" method="POST">
-        <input type="text" placeholder="Stage Name" name="stageName">
-        <input type="text" placeholder="Birth Name" name="birthName">
-        <input type="submit">
-    </form>
-    
-
     <script src='js/main.js'></script>
 </body>
 </html>
