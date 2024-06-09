@@ -17,9 +17,7 @@ let db,
         console.log(`Connected to ${dbName} Database`);
         db = client.db(dbName);
         collection = db.collection(dbName);
-    })
-    .catch(error => console.error(error));
-
+  
 
 
 const basketballTeam = {
@@ -186,26 +184,7 @@ const basketballTeam = {
 
 };
 
-
-
-    // function insertBasketballTeams() {
-    //     // Insert each team into the collection
-    //     for (const [teamName, teamInfo] of Object.entries(basketballTeam)) {
-    //         collection.insertOne({
-    //            teamName,
-    //             teamInfo
-    //        })
-    //        .then(result => {
-    //         console.log(`Inserted ${teamName} into the collection`);
-    //     })
-    //     .catch(error => console.error(error));
-    // }
-    // }
-       
-       
-    //    // Call the function to insert basketball teams
-    //    insertBasketballTeams();
-       
+//basketball team data and other operations here
 
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
@@ -233,37 +212,8 @@ app.post('/findTeams', (request, response) => {
 });
 
 
-
-
-
-
-// app.put('/addOneLike', (request, response) => {
-//     db.collection('rappers').updateOne({stageName: request.body.stageNameS, birthName: request.body.birthNameS,likes: request.body.likesS},{
-//         $set: {
-//             likes:request.body.likesS + 1
-//           }
-//     },{
-//         sort: {_id: -1},
-//         upsert: true
-//     })
-//     .then(result => {
-//         console.log('Added One Like')
-//         response.json('Like Added')
-//     })
-//     .catch(error => console.error(error))
-
-// })
-
-// app.delete('/deleteRapper', (request, response) => {
-//     db.collection('rappers').deleteOne({stageName: request.body.stageNameS})
-//     .then(result => {
-//         console.log('Rapper Deleted')
-//         response.json('Rapper Deleted')
-//     })
-//     .catch(error => console.error(error))
-
-// })
-
 app.listen(process.env.PORT || PORT, ()=>{
-    console.log(`Server running on port ${PORT}`)
+    console.log(`Server running on port ${PORT}`);
+});
 })
+.catch(error => console.error(error));
