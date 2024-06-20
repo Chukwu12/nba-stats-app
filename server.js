@@ -24,7 +24,7 @@ const basketballTeam = {
     'Atlanta Hawks': {
         'championships': 0,
         'Most 3s': 'Trae Young',
-        'best Record': '60-2'
+        'best Record': '60-22'
     },
     'Boston Celtics': {
         'championships': 17,
