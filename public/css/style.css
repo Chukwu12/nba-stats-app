@@ -49,7 +49,7 @@ section{
 }
 
 .form-box{
-    width: 450px;
+    width: 600px;
     height: 600px;
     display: flex;
     flex-direction: column;
@@ -102,4 +102,8 @@ h2{
     align-items: center;
     flex-direction: column;
     gap: 30px; 
+}
+
+.basketball-content{
+    margin: 15px 0;
 }
