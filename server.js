@@ -1,22 +1,22 @@
 const express = require('express')
 const app = express()
-const MongoClient = require('mongodb').MongoClient
+// const MongoClient = require('mongodb').MongoClient
 const PORT = process.env.PORT || 2121;
 require('dotenv').config()
 
 
 
-let db,
-    collection, // Define the collection variable
-    dbConnectionStr = process.env.DB_STRING,
-    dbName = 'basketball-teams'
+// let db,
+//     collection, // Define the collection variable
+//     dbConnectionStr = process.env.DB_STRING,
+//     dbName = 'basketball-teams'
 
 
-    MongoClient.connect(dbConnectionStr)
-    .then(client => {
-        console.log(`Connected to ${dbName} Database`);
-        db = client.db(dbName);
-        collection = db.collection(dbName);
+//     MongoClient.connect(dbConnectionStr)
+//     .then(client => {
+//         console.log(`Connected to ${dbName} Database`);
+//         db = client.db(dbName);
+//         collection = db.collection(dbName);
   
 
 
@@ -193,27 +193,22 @@ app.use(express.json())
 
 
 app.get('/', (request, response) => {
-    response.render('index.ejs', { info: null });
+    response.render('index', { info: null, teams: basketballTeam });
 });
 
 
 app.post('/findTeams', (request, response) => {
-    
-    const teamName = request.body.teamName.toLowerCase(); // Convert user input to lowercase
-    collection.findOne({ teamName: { $regex: new RegExp(teamName, 'i') } }) // Use case-insensitive regex search
-        .then(team => {
-            if (team) {
-                response.render('index.ejs', { info: team });
-            } else {
-                response.render('index.ejs', { info: null }); // Team not found
-            }
-        })
-        .catch(error => console.error(error));
+    const teamName = request.body.teamName; // Use raw teamName from the form
+    const teamInfo = basketballTeam[teamName] || null; // Get team info or null if not found
+    response.render('index', { info: teamInfo, teams: basketballTeam, infoName: teamName });
+    console.log("POST /findTeams Request Body:", request.body); // Log the request body
+    console.log("Team Info:", teamInfo); // Log the team info
+
 });
 
 
 app.listen(process.env.PORT || PORT, ()=>{
     console.log(`Server running on port ${PORT}`);
 });
-})
-.catch(error => console.error(error));
+
+

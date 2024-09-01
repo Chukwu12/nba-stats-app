@@ -26,10 +26,10 @@
                 <ul class="teams">
                     <% if (info) { %>
                         <h2>Teams Information</h2>
-                        <p>Team Name: <%= info.teamName %></p>
+                        <p>Team Name: <%= infoName %></p>
                         <p>Championships: <%= info.championships %></p>
-                        <p>Most 3s: <%= info.Most3s %></p>
-                        <p>Best Record: <%= info.bestRecord %></p>
+                        <p>Most 3s: <%= info['Most 3s'] %></p>
+                        <p>Best Record: <%= info['best Record'] %></p>
                     <% } else { %>
                         <p>Team not found.</p>
                     <% } %>
