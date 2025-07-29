@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Basketball Team Stat Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <section>
+        <div class="container">
+            <div class="form-box">
+                <h1>Basketball Team <i class="fa-solid fa-basketball fa-bounce"></i></h1>
+                <div class="basketball-content">
+                    <!-- Modify action attribute to point to the route where form data will be submitted -->
+                    <form action="/findTeams" method="POST">
+                        <!-- Add name attribute to input field -->
+                        <input type="text" placeholder="Enter Team Name" name="teamName">
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+
+                <!-- Render results using EJS -->
+                <ul class="teams">
+                    <% if (info) { %>
+                        <!-- <h2>Teams Information</h2> -->
+                        <p>Team Name: <%= infoName %></p>
+                        <p>Championships: <%= info.championships %></p>
+                        <p>Most 3s: <%= info['Most 3s'] %></p>
+                        <p>Best Record: <%= info['best Record'] %></p>
+                    <% } else { %>
+                     
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <script src='js/main.js'></script>
+</body>
+</html>

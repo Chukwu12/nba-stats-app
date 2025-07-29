@@ -1,43 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NBA Basketball Team Stat Tracker</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <section>
-        <div class="container">
-            <div class="form-box">
-                <h1>Basketball Team <i class="fa-solid fa-basketball fa-bounce"></i></h1>
-                <div class="basketball-content">
-                    <!-- Modify action attribute to point to the route where form data will be submitted -->
-                    <form action="/findTeams" method="POST">
-                        <!-- Add name attribute to input field -->
-                        <input type="text" placeholder="Enter Team Name" name="teamName">
-                        <button type="submit">Search</button>
-                    </form>
-                </div>
 
-                <!-- Render results using EJS -->
-                <ul class="teams">
-                    <% if (info) { %>
-                        <!-- <h2>Teams Information</h2> -->
-                        <p>Team Name: <%= infoName %></p>
-                        <p>Championships: <%= info.championships %></p>
-                        <p>Most 3s: <%= info['Most 3s'] %></p>
-                        <p>Best Record: <%= info['best Record'] %></p>
-                    <% } else { %>
-                     
-                    <% } %>
-                </ul>
-            </div>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NBA Basketball Team Stat Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="home-container">
+    <h2 class="fixed">NBA Stats</h2>
+    <div class="frame">
+      <div class="wrapper">
+        <div class="home-imgs">
+          <img src="/img/Jordan gif.gif" alt="">
+          <img src="/img/ANIMATION — WalkerTKL.gif" alt="">
+          <img src="/img/1959eb0193e9cf7576d222ea41165cf3.gif" alt="">
         </div>
-    </section>
-    
-    <script src='js/main.js'></script>
+      </div>
+
+      <div class="heading">
+        <div class="logo">Onice <span>NBA</span></div>
+        <div class="text">
+          <h1>NBA Stats</h1>
+        </div>
+        <div>
+          <h2>Basketball</h2>
+        </div>
+      </div>
+
+      <p>🏀 NBA Insight Hub
+        Your ultimate destination for real-time NBA stats, team performance, player insights, and fast-breaking updates.
+        Stay ahead of the game with live data feeds, in-depth analysis, historical facts, and key trends across the
+        league. Whether you're tracking your favorite team's standings or diving deep into player performance, this
+        platform delivers everything basketball fans and analysts need — all in one place. </p>
+        <a href="#">Explore</a>
+    </div>
+  </div>
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src='js/main.js'></script>
 </body>
+
 </html>

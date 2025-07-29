@@ -107,3 +107,169 @@ h2{
 .basketball-content{
     margin: 15px 0;
 }
+
+/* home page */
+.home-container{
+  width: 100%;
+  height: 100%;
+  background: url();
+}
+
+.home-container .fixed{
+  position: fixed;
+  top: -100px;
+  left: -104px;
+  font-size: 350px;
+  font-family: ;
+  opacity: 0.5;
+  -webkit-text-stroke: 2px solid #fff;
+  text-shadow: 0px 0px 8px #fff;
+}
+
+.frame{
+  width: 90%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.wrapper{
+  display: grid;
+  place-items: center;
+  margin-bottom: 20%;
+}
+
+.home-imgs{
+position: relative;
+}
+
+.home-imgs img{
+  position: absolute;
+  width: 450px;
+  box-shadow: 0px 0px 10px #000;
+  transform: scale(1);
+}
+
+.home-imgs img:nth-child(2){
+  top: -30px;
+  left: -180px;
+}
+
+.home-imgs img:last-child{
+  top: 170px;
+  left: 30px;
+  width: 320px;
+}
+
+.heading{
+  position: relative;
+  z-index: 99;
+}
+
+.logo{
+  width: 100%;
+  text-align: right;
+  font-size: 25px;
+  padding: 25px 0px;
+}
+
+.logo span{
+  display: inline-block;
+  font-size: 50px;
+}
+
+.text{
+  margin-top: 60px;
+}
+
+.text div{
+  overflow: hidden;
+}
+
+.text h1{
+  font-family: Aquire;
+  font-size: 98px;
+  line-height: 100%;
+  -webkit-text-stroke: 2px #fff;
+  text-shadow: 0px 0px 8px #fff;
+}
+
+.heading p {
+  padding: 30px 0px;
+  font-size: 19px;
+}
+
+.heading a {
+  font-size: 18px;
+  text-decoration: none;
+  color: #fff;
+  border: 1px solid#fff;
+  padding: 14px 20px;
+  -webkit-transition: 0.5s;
+}
+
+.heading a:hover ~ #ball{
+  border: 2px solid crimson;
+}
+
+.cool-text {
+  position: absolute;
+  right: 28px;
+  bottom: 23px;
+  opacity: 1;
+  margin: 0;
+  letter-spacing: 6px;
+  animation: is-off 2s linear infinite;
+  
+}
+
+@keyframes is-off{
+  0%{
+opacity: 0.6;
+  }
+   50%{
+    opacity: .6;
+  }
+   56%{
+    opacity: 0;
+  }
+     57%{
+     opacity: 0;
+  }
+   58%{
+     opacity: .6;
+  }
+   71%{
+    transform: scaleY(1) skew(0deg);
+  }
+   72%{
+     transform: scaleY(3) skew(-60deg);
+  }
+   73%{
+     transform: scaleY(1) skew(0deg);
+  }
+   80%{
+    opacity: .6;
+  }
+    81%{
+    opacity: 0;
+  }
+   82%{
+    opacity: .6;
+  }
+   85%{
+        opacity: .6;
+  }
+   91%{
+     transform: scaleX(1) scaleY(1) skew(0deg);
+     color: #fff;
+  }
+   92%{
+     transform: scaleX(1.5) scaleY(0.2) skew(80deg);
+          color: #fff;
+  }
+   93%{
+    transform: scaleX(1) scaleY(1) skew(0deg);
+          color: #fff;
+  }
+}
