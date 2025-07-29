@@ -32,11 +32,11 @@
   }
 
 
-section{
+/* section{
     background: url(/img/basketball-img.jpg) no-repeat;
     background-size: cover;
     background-position: center;
-  }
+  } */
 
   .container{
     display: flex;
@@ -109,6 +109,15 @@ h2{
 }
 
 /* home page */
+
+#home-page{
+  overflow: hidden;
+  height: 100vh;
+  background: #333;
+  width: 100%;
+  color: #fff;
+
+}
 .home-container{
   width: 100%;
   height: 100%;
@@ -148,6 +157,13 @@ position: relative;
   width: 450px;
   box-shadow: 0px 0px 10px #000;
   transform: scale(1);
+      border-radius: 25px;
+}
+
+.home-imgs img:first-child{
+  top: -150px;
+  left: -250px;
+  width: 300px;
 }
 
 .home-imgs img:nth-child(2){
@@ -206,6 +222,11 @@ position: relative;
   border: 1px solid#fff;
   padding: 14px 20px;
   -webkit-transition: 0.5s;
+}
+
+.heading a:hover{
+  background: #000;
+  color: #fff;
 }
 
 .heading a:hover ~ #ball{
@@ -272,4 +293,37 @@ opacity: 0.6;
     transform: scaleX(1) scaleY(1) skew(0deg);
           color: #fff;
   }
+}
+
+.link_grow{
+  width: 70px  !important;
+  height: 70px !important;
+  border: 2px solid #fff;
+  background: #fff;
+  mix-blend-mode: difference;
+}
+
+.text_grow{
+  width: 120px !important;
+  height: 120px !important;
+  border: 2px solid #000;
+  background: #fff;
+  mix-blend-mode: difference;
+}
+
+#ball{
+  position: fixed;
+  display: block;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  border-radius:  50%;
+  pointer-events: none;
+  height: 40px;
+  border: 2px solid #fff;
+  margin-right: 14px;
+  z-index: 9999;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  transition-property: background, transform,-webkit-transform;
 }
