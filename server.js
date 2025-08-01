@@ -191,6 +191,9 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
+app.get('/team-tracker', (req, res) => {
+    res.render('teamTracker', { info: null, infoName: null }); 
+  });
 
 app.get('/', (request, response) => {
     response.render('index', { info: null, teams: basketballTeam });
@@ -198,13 +201,11 @@ app.get('/', (request, response) => {
 
 
 app.post('/findTeams', (request, response) => {
-    const teamName = request.body.teamName; // Use raw teamName from the form
-    const teamInfo = basketballTeam[teamName] || null; // Get team info or null if not found
-    response.render('index', { info: teamInfo, teams: basketballTeam, infoName: teamName });
-    console.log("POST /findTeams Request Body:", request.body); // Log the request body
-    console.log("Team Info:", teamInfo); // Log the team info
-
+    const teamName = request.body.teamName;
+    const teamInfo = basketballTeam[teamName] || null;
+    response.render('teamTracker', { info: teamInfo, infoName: teamName }); // ← Fix here
 });
+
 
 
 app.listen(process.env.PORT || PORT, ()=>{
