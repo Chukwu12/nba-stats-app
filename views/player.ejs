@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Basketball Team Stat Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+  
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <section class="flex">
+    <%- include('partials/sidebar') %>
+  
+    <main class="ml-64 p-8 w-full">
+      <!-- Existing player data content -->
+      <div class="bg-white shadow p-6 rounded">
+        <h1 class="text-3xl font-bold mb-4"><%= player.first_name %> <%= player.last_name %></h1>
+        <img src="<%= playerImg %>" alt="Player Image" onerror="this.src='/img/default-player.png'" class="w-48 h-48 object-cover mb-4 rounded" />
+  
+        <ul class="space-y-2 text-gray-700">
+          <li><strong>Position:</strong> <%= player.position || 'N/A' %></li>
+          <li><strong>Height:</strong> <%= player.height || 'N/A' %></li>
+          <li><strong>Weight:</strong> <%= player.weight || 'N/A' %> lbs</li>
+          <li><strong>Team:</strong> <%= player.team.full_name %></li>
+          <li><strong>Country:</strong> <%= player.country || 'N/A' %></li>
+        </ul>
+  
+        <a href="/" class="mt-6 inline-block text-blue-600 hover:underline">← Back to Home</a>
+      </div>
+    </main>
+  </section>
+  
+  </body>
+  
+</html>
