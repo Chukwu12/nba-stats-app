@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+body {
+  font-family: 'Arial', sans-serif; 
+  overflow-x: hidden; 
+}
+
 button {
   height: 30px;
   width: 60px;
@@ -17,7 +22,7 @@ input {
 }
 
 p {
-  font-size: 25px;
+  /* font-size: 25px; */
   color: #030301;
   font-weight: 600;
   z-index: inherit;
@@ -35,7 +40,14 @@ h2 {
   background: url(/img/basketball-img.jpg) no-repeat;
   background-size: cover;
   background-position: center;
+  height: 100vh;
 }
+
+main {
+  margin-left: 16rem; /* match sidebar width */
+  padding: 2rem;
+}
+
 
 .container {
   display: flex;
@@ -49,7 +61,8 @@ h2 {
 
 .form-box {
   width: 600px;
-  height: 600px;
+  min-height: 400px;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -135,6 +148,8 @@ h2 {
 
 .wrapper {
   display: flex;
+  position: absolute;
+    bottom: 0;
 }
 
 .home-imgs img {
@@ -292,8 +307,9 @@ h2 {
   mix-blend-mode: difference;
 }
 
+/* Floating ball animation */
 #ball {
-  position: fixed;
+  position: absolute;
   display: block;
   left: 0;
   top: 0;
@@ -301,12 +317,26 @@ h2 {
   border-radius: 50%;
   pointer-events: none;
   height: 40px;
+  width: 40px;
   border: 2px solid #fff;
-  margin-right: 14px;
   z-index: 9999;
-  pointer-events: none;
   transition: all 0.2s ease;
-  transition-property: background, transform, -webkit-transform;
+}
+
+/* Bounce animation for icons */
+.fa-bounce {
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-15px); }
+}
+
+/* Cool floating text */
+.cool-text {
+  font-weight: 600;
+  letter-spacing: 2px;
 }
 
 /* Media Queries for Tablets and Phones */

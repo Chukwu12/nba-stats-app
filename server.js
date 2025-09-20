@@ -38,7 +38,10 @@ app.use(express.json())
 
 // Routes
 app.use('/players', playerRoutes);   // /players/:id
-app.use('/teams', teamRoutes);   app.use('/players', playerRoutes);   // /players/:id
+app.use('/', teamRoutes);   
+app.get('/', (req, res) => {
+  res.render('index'); // make sure you have views/index.ejs
+});
 
 
 
