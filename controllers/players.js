@@ -18,9 +18,10 @@ exports.getPlayerById = async (req, res) => {
     // Fallback image (local or hosted)
     const fallbackImg = '/img/default-player.png'; // Put this in public/img/
 
-    res.render('player', { player, playerImg, fallbackImg });
-  } catch (error) {
-    console.error('Error fetching player:', error.message);
+    router.get('/', (req, res) => {
+      res.render('player', { player: null });
+    });
+    
 
     if (error.response && error.response.status === 404) {
       return res.status(404).render('error', { message: 'Player not found' });
