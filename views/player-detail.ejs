@@ -19,19 +19,24 @@
       <div class="max-w-4xl w-full bg-white p-8 rounded-xl shadow-lg flex flex-col md:flex-row gap-8">
         
         <!-- Player Image -->
-        <img src="<%= player.image %>" alt="<%= player.first_name %>" class="w-64 h-64 object-cover rounded-lg shadow mx-auto md:mx-0">
+        <img src="<%= player.image || '../public/imgs/default.jpeg' %>" 
+             alt="<%= player.first_name %> <%= player.last_name %>" 
+             class="w-64 h-64 object-cover rounded-lg shadow mx-auto md:mx-0">
 
         <!-- Player Info -->
         <div class="flex-1">
           <h1 class="text-4xl font-bold mb-6 text-center md:text-left">
-            <%= player.first_name %> <%= player.last_name %>
+            <%= player.first_name || 'N/A' %> <%= player.last_name || '' %>
           </h1>
           
           <ul class="bg-gray-50 p-6 rounded-lg shadow space-y-2">
-            <li><strong>Team:</strong> <%= player.team.full_name %></li>
+            <li><strong>Team:</strong> <%= player.team?.full_name || 'N/A' %></li>
             <li><strong>Position:</strong> <%= player.position || 'N/A' %></li>
-            <li><strong>Height:</strong> <%= player.height_feet || '-' %> ft <%= player.height_inches || '-' %> in</li>
-            <li><strong>Weight:</strong> <%= player.weight_pounds || 'N/A' %> lbs</li>
+            <li><strong>Height:</strong> 
+              <%= player.height_feet ? player.height_feet + ' ft' : '-' %> 
+              <%= player.height_inches ? player.height_inches + ' in' : '' %>
+            </li>
+            <li><strong>Weight:</strong> <%= player.weight_pounds ? player.weight_pounds + ' lbs' : 'N/A' %></li>
             <li><strong>College:</strong> <%= player.college || 'N/A' %></li>
             <li><strong>Draft Year:</strong> <%= player.draft_year || 'N/A' %></li>
           </ul>
@@ -43,6 +48,7 @@
   </div>
 
   <script>
+    // Animate player page
     gsap.from("h1", { opacity: 0, y: -30, duration: 1 });
     gsap.from("ul li", { opacity: 0, y: 20, stagger: 0.1, duration: 0.5, delay: 0.3 });
   </script>

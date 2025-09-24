@@ -10,7 +10,7 @@ const teamRoutes = require('./router/teaminfo');
 
 
 // Load environment variables
-require('dotenv').config({ path: './config/.env' });
+require('dotenv').config();
 
 // let db,
 //     collection, // Define the collection variable
@@ -40,14 +40,15 @@ app.use(express.json())
 app.use('/players', playerRoutes);   // /players/:id
 app.use('/', teamRoutes);   
 app.get('/', (req, res) => {
-  res.render('index'); // make sure you have views/index.ejs
+  res.render('index'); //  views/index.ejs
 });
 
+app.use("/api", require("./router/players"));
 
-
-
-
-
+// players.ejs page
+// app.get("/players", (req, res) => {
+//   res.render("players");
+// });
 
 const PORT = process.env.PORT || 2121;
 

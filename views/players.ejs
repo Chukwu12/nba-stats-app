@@ -10,59 +10,45 @@
 </head>
 <body class="bg-gray-100 text-gray-900 font-sans">
 
-<section class="flex">
-  <%- include('partials/sidebar') %>
+<section class="flex min-h-screen">
+  <!-- Sidebar -->
+<%- include("partials/sidebar") %>
+<div class="ml-64 p-6">
+  <h1 class="text-3xl font-bold mb-6">NBA Players</h1>
 
-  <section id="players-page" class="p-10 flex-1">
-    <h1 class="text-4xl font-bold mb-8 text-center">NBA Players</h1>
+  <!-- Search Form -->
+  <form action="/players" method="get" class="mb-6 flex gap-2">
+    <input type="text" name="search" placeholder="Search players..." 
+      class="flex-1 border rounded px-3 py-2" value="<%= search || '' %>">
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Search
+    </button>
+  </form>
 
-    <div class="flex justify-center mt-10">
-      <form action="/players/search" method="GET" class="flex gap-2">
-        <input 
-          type="text" 
-          name="name" 
-          placeholder="Search for a player..." 
-          class="border rounded px-4 py-2 w-80"
-          required
-        />
-        <button 
-          type="submit" 
-          class="bg-blue-600 text-white px-4 py-2 rounded">
-          Search
-        </button>
-      </form>
-    </div>
-    
-    <% if (player) { %>
-      <div class="mt-10 flex justify-center">
-        <div class="bg-white shadow-lg rounded-xl p-6 w-[400px] animate-fade-in">
-          <h2 class="text-2xl font-bold text-center mb-4"><%= player.name %></h2>
-          <p><strong>Team:</strong> <%= player.team %></p>
-          <p><strong>Points:</strong> <%= player.points %></p>
-          <p><strong>Assists:</strong> <%= player.assists %></p>
-          <p><strong>Rebounds:</strong> <%= player.rebounds %></p>
-        </div>
-      </div>
-    <% } %>
-    
+  <!-- Players Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% players.forEach(player => { %>
+      <a href="/players/<%= player.id %>" 
+         class="block border rounded p-4 hover:shadow-lg hover:bg-gray-50 transition">
+        <h2 class="font-bold text-lg"><%= player.first_name %> <%= player.last_name %></h2>
+        <p class="text-gray-600">Position: <%= player.position || 'N/A' %></p>
+        <p class="text-gray-600">Team: <%= player.team?.full_name || 'N/A' %></p>
+      </a>
+    <% }) %>
+  </div>
+</div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <% players.forEach(player => { %>
-        <a href="/players/<%= player.id %>" class="block bg-white p-6 rounded-lg shadow hover:shadow-lg transition transform hover:-translate-y-1">
-          <img src="<%= player.image %>" alt="<%= player.first_name %>" class="w-full h-48 object-cover rounded mb-4">
-          <h2 class="text-xl font-semibold mb-2"><%= player.first_name %> <%= player.last_name %></h2>
-          <p class="text-sm text-gray-600">Team: <%= player.team.full_name %></p>
-          <p class="text-sm text-gray-600">Position: <%= player.position || 'N/A' %></p>
-        </a>
-      <% }) %>
-    </div>
-    
-  </section>
+
+
 </section>
 
 <script>
-  gsap.from("#players-page h1", { opacity: 0, y: -30, duration: 1 });
-  gsap.from("#players-page a", { opacity: 0, y: 30, stagger: 0.1, duration: 0.6, delay: 0.3 });
+  // Animate page load like the YouTube video
+  gsap.to("#players-page h1", { opacity: 1, y: -20, duration: 1 });
+  gsap.to("form", { opacity: 1, y: -10, duration: 1, delay: 0.5 });
+
+  // Animate player card result
+  gsap.to(".player-card", { opacity: 1, y: -10, duration: 1, delay: 1 });
 </script>
 
 </body>

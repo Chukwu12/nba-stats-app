@@ -1,0 +1,16 @@
+<!-- views/partials/injuryModal.ejs -->
+<div id="injuryModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white text-black rounded-lg shadow-lg w-96 max-h-[80vh] overflow-y-auto relative">
+    <!-- Close Button -->
+    <button onclick="closeInjuryReport()" 
+            class="absolute top-2 right-2 text-gray-600 hover:text-red-500 text-xl">
+      &times;
+    </button>
+    
+    <!-- Content -->
+    <div id="injuryModalContent" class="p-6">
+      <h2 class="text-xl font-bold mb-4">Injury Report</h2>
+      <p>Loading...</p>
+    </div>
+  </div>
+</div>
