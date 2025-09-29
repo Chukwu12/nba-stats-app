@@ -396,3 +396,9 @@ h2 {
     width: 60vw;
   }
 }
+
+.player-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
