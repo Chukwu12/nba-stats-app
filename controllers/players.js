@@ -9,7 +9,7 @@ exports.searchPlayer = async (req, res) => {
     return res.render("players", { player: null, error: "Please enter a player name" });
   }
 
-  // Correct API URL
+  //API URL
   const url = `https://api.balldontlie.io/v1/players`;
   console.log("Requesting:", `${url}?search=${name}`);
 
