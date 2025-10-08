@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>NBA Injury Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-900 font-sans">
+  <%- include('partials/sidebar') %>
+
+  <div class="max-w-7xl mx-auto p-6 ml-64">
+    <h1 class="text-3xl font-bold mb-6 text-red-600">NBA Injury Report</h1>
+
+    <!-- 🔍 Search Form -->
+    <form action="/injury-report/search" method="GET" class="mb-6">
+      <input
+        type="text"
+        name="query"
+        placeholder="Search player injuries..."
+        value="<%= search || '' %>"
+        class="border border-gray-300 p-2 rounded w-full md:w-1/2"
+        required
+      />
+      <button type="submit" class="ml-2 px-4 py-2 bg-blue-600 text-white rounded">Search</button>
+    </form>
+
+    <!-- 🔥 Error Message -->
+    <% if (error) { %>
+      <div class="bg-red-100 text-red-800 border border-red-200 p-4 rounded mb-6">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <!-- 🔍 Search Results -->
+    <% if (searchResults && searchResults.length > 0) { %>
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Search Results for "<%= search %>"</h2>
+        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% searchResults.forEach(player => { %>
+            <li class="bg-white p-4 rounded shadow flex items-center gap-4">
+              <img src="<%= '/img/default.jpeg' %>" alt="<%= player.displayName %>" class="w-20 h-20 rounded-full object-cover border" />
+              <div>
+                <h3 class="font-bold text-blue-700 text-lg"><%= player.displayName %></h3>
+                <p class="text-sm text-gray-600"><%= player.subtitle || 'No team info' %></p>
+                <% if (player.link?.web) { %>
+                  <a href="<%= player.link.web %>" target="_blank" class="text-blue-500 text-sm underline">View Player Profile</a>
+                <% } %>
+              </div>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } else if (search) { %>
+      <p class="text-sm text-gray-600 italic">No matching players found for "<%= search %>".</p>
+    <% } %>
+
+    <!-- 🏥 Default Injury Grid -->
+    <% if (!search) { %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% players.forEach(player => { 
+          const injury = injuries.find(inj => inj.athlete?.displayName === `${player.first_name} ${player.last_name}`);
+        %>
+          <a href="/players/<%= player.id %>" class="block bg-white border rounded-lg p-6 shadow hover:shadow-lg transition">
+            <div class="flex gap-4 items-center">
+              <img src="<%= '/img/default.jpeg' %>" alt="<%= player.first_name %>" class="w-16 h-16 rounded-full object-cover border-2 border-red-500" />
+              <div>
+                <h2 class="font-bold text-lg text-blue-800"><%= player.first_name %> <%= player.last_name %></h2>
+                <p class="text-sm text-gray-600">Team: <%= player.team %></p>
+                <% if (injury) { %>
+                  <p class="text-sm text-red-600 font-semibold"><%= injury.status %></p>
+                  <p class="text-xs text-gray-500 italic"><%= injury.shortComment %></p>
+                <% } else { %>
+                  <p class="text-xs text-green-600">No injury reported</p>
+                <% } %>
+              </div>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+
+  </div>
+</body>
+</html>

@@ -10,11 +10,12 @@ body {
 }
 
 button {
-  height: 30px;
+  /* height: 30px;
   width: 60px;
   border-radius: 25px;
   font-weight: 600;
-  background-color: aliceblue;
+  background-color: aliceblue; */
+
 }
 
 input {

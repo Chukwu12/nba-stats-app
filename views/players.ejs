@@ -1,66 +1,65 @@
+<!-- player.ejs -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NBA Players</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body class="bg-gray-100 text-gray-900 font-sans">
+  <section class="flex min-h-screen">
+    <%- include("partials/sidebar") %>
 
-<section class="flex min-h-screen">
-  <!-- Sidebar -->
-<%- include("partials/sidebar") %>
-<div id="players-page" class="ml-64 p-6 w-full max-w-7xl mx-auto">
-  <h1 class="text-3xl font-bold mb-6">NBA Players</h1>
+    <div id="players-page" class="ml-64 p-6 w-full max-w-7xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6">NBA Players</h1>
 
-<!-- Search Form -->
-<form action="/players" method="get" class="mb-6 flex flex-col sm:flex-row gap-3">
-  <input type="text" name="search" placeholder="Search players..." 
-         class="flex-1 border border-gray-300 rounded px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-         value="<%= search || '' %>">
-         
-  <button type="submit" class="bg-blue-600 text-white px-5 py-3 rounded hover:bg-blue-700 transition font-semibold">
-    Search
-  </button>
-</form>
+      <!-- Search -->
+      <form action="/players/search" method="get" class="mb-6 flex flex-col sm:flex-row items-center gap-3">
+        <input type="text" name="search" placeholder="Search players..." class="h-[40px] flex-1 border border-gray-300 rounded px-4 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" value="<%= search || '' %>">
+        <button type="submit" class="bg-blue-600 text-white px-5 py-3 rounded hover:bg-blue-700 transition font-semibold">
+          Search
+        </button>
+      </form>
 
-
-
-<!-- Players Grid -->
+      <!-- Player Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
   <% players.forEach(player => { %>
-    <a href="/players/<%= player.id %>" 
-       class="player-card group block bg-white border border-gray-200 rounded-lg shadow hover:shadow-xl hover:-translate-y-1 transform transition p-6">
-       
+    <a href="/players/<%= player.id %>" class="player-card group block bg-white border border-gray-200 rounded-lg shadow hover:shadow-xl transition p-6">
       <div class="flex items-center gap-4">
-        <img src="<%= player.image %>" 
-             alt="<%= player.first_name %> <%= player.last_name %>" 
-             class="w-20 h-20 rounded-full object-cover border-2 border-blue-500 group-hover:scale-105 transition" />
-        
+        <img src="<%='/img/default.jpeg' %>" alt="<%= player.first_name || player.last_name %>" class="w-20 h-20 rounded-full object-cover border-2 border-blue-500 group-hover:scale-105 transition" />
+
         <div>
-          <h2 class="text-xl font-bold text-blue-800"><%= player.first_name %> <%= player.last_name %></h2>
           <p class="text-sm text-gray-600">Position: <%= player.position || 'N/A' %></p>
-          <p class="text-sm text-gray-600">Team: <%= player.team?.full_name || 'N/A' %></p>
+          
+         <% 
+            let teamName = 'Free Agent';
+            if (typeof player.team === 'string') {
+              teamName = player.team;
+            } else if (player.team && player.team.full_name) {
+              teamName = player.team.full_name;
+            }
+          %>
+          <p class="text-sm text-gray-600">Team: <%= teamName %></p>
+
+          <h2 class="text-xl font-bold text-blue-800"><%= player.first_name %> <%= player.last_name %></h2>
         </div>
       </div>
     </a>
   <% }) %>
 </div>
 
+    </div>
+  </section>
+   <!-- Load GSAP first -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-
-
-
-</section>
-<!-- Custom JS -->
-    <script src="/js/player.js"></script>
-<script>
-
-</script>
-
+<!-- Then your custom JS -->
+<script src="/js/player.js"></script>
 
 </body>
+
 </html>

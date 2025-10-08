@@ -5,8 +5,9 @@ const path = require('path');
 
 
 // Import routes
-const playerRoutes = require('./router/players');
-const teamRoutes = require('./router/teaminfo');
+const playerRoutes = require('./routes/players');
+const teamRoutes = require('./routes/teaminfo');
+const injuryReportRoute = require("./routes/injuryReport");
 
 
 // Load environment variables
@@ -36,14 +37,14 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 
-// Routes
-app.use('/players', playerRoutes);   // /players/:id
+// Routes usage
+app.use('/players', playerRoutes);  // for player details
 app.use('/', teamRoutes);   
 app.get('/', (req, res) => {
   res.render('index'); //  views/index.ejs
 });
-
-app.use("/api", require("./router/players"));
+app.use('/injury-report', require('./routes/injuryReport')); // shows injury report
+app.use("/api", require("./routes/players"));
 
 // players.ejs page
 // app.get("/players", (req, res) => {

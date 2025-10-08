@@ -13,34 +13,35 @@
 <body class="bg-gray-100 text-gray-900 font-sans">
 
   <div class="flex min-h-screen">
-    <!-- Sidebar -->
     <%- include('partials/sidebar') %>
 
-    <!-- Main content -->
     <main class="ml-64 flex-1 p-8 flex items-start justify-center">
       <div class="max-w-4xl w-full bg-white p-8 rounded-xl shadow-lg flex flex-col md:flex-row gap-8">
 
-        <!-- Player Image -->
-        <img src="<%= player.image || '../public/imgs/default.jpeg' %>" alt="<%= player.first_name %> <%= player.last_name %>" class="w-64 h-64 object-cover rounded-lg shadow mx-auto md:mx-0">
+        <!-- Image -->
+        <img src="<%='/img/default.jpeg' %>" alt="<%= player.fullName %>" class="w-64 h-64 object-cover rounded-lg shadow mx-auto md:mx-0">
 
-        <!-- Player Info -->
+        <!-- Info -->
         <div class="flex-1">
-          <h1 class="text-4xl font-bold mb-6 text-center md:text-left">
-            <%= player.first_name || 'N/A' %> <%= player.last_name || '' %>
-          </h1>
+          <h1 class="text-4xl font-bold mb-6 text-center md:text-left"><%= player.fullName %></h1>
 
           <ul class="bg-gray-50 p-6 rounded-lg shadow space-y-2">
-            <li><strong>Team:</strong> <%= player.team?.full_name || 'N/A' %></li>
+            <li><strong>Team:</strong> <%= player.team || 'N/A' %></li>
             <li><strong>Position:</strong> <%= player.position || 'N/A' %></li>
-            <li><strong>Height:</strong>
-              <%= player.height ? player.height.replace('-', "'") + '"' : 'N/A' %>
-            </li>
-            <li><strong>Weight:</strong> <%= player.weight ? player.weight + ' lbs' : 'N/A' %></li>
+            <li><strong>Jersey:</strong> #<%= player.jersey_number || 'N/A' %></li>
+            <li><strong>Height:</strong> <%= player.height || 'N/A' %></li>
+            <li><strong>Weight:</strong> <%= player.weight || 'N/A' %></li>
             <li><strong>College:</strong> <%= player.college || 'N/A' %></li>
-            <li><strong>Draft Round:</strong> <%= player.draft_round || 'N/A' %></li>
           </ul>
 
-          <a href="/players" class="inline-block mt-6 text-blue-600 hover:underline">← Back to Players</a>
+
+          <% if (player.links && player.links[0]) { %>
+          <a href="<%= player.links[0].href %>" target="_blank" class="block mt-6 text-blue-600 hover:underline font-semibold">
+            View on ESPN →
+          </a>
+          <% } %>
+
+          <a href="/players" class="block mt-4 text-blue-500 hover:underline">← Back to Players</a>
         </div>
       </div>
     </main>
