@@ -18,7 +18,8 @@
     "dotenv": "^8.2.0",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
-    "mongodb": "^6.6.0",
+    "mongodb": "^6.20.0",
+    "mongoose": "^8.19.1",
     "sweetalert2": "^11.23.0"
   },
   "devDependencies": {

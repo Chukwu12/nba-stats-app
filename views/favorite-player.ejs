@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Favorite Players</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-900 font-sans">
+  <%- include('partials/sidebar') %>
+
+  <main class="ml-64 p-8">
+    <h1 class="text-3xl font-bold mb-6">Favorite Players</h1>
+
+    <!-- Search Form -->
+    <form action="/favorite-player/searchPlayer" method="POST" class="mb-6 flex gap-2">
+      <input type="text" name="playerName" placeholder="Enter Player Name" class="p-2 border rounded flex-1" required>
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Search</button>
+    </form>
+
+    <!-- Error Message -->
+    <% if (error) { %>
+      <p class="text-red-500 mb-4"><%= error %></p>
+    <% } %>
+
+    <!-- Player Info -->
+    <% if (player) { %>
+      <div class="bg-white p-6 rounded-lg shadow mb-6">
+        <h2 class="text-2xl font-bold mb-2"><%= player.first_name %> <%= player.last_name %></h2>
+        <p>Team: <%= player.team.full_name %></p>
+        <p>Position: <%= player.position %></p>
+        <p>Height: <%= player.height_feet %>' <%= player.height_inches %>"</p>
+        <p>Weight: <%= player.weight_pounds %> lbs</p>
+
+        <% const isFav = favorites.some(f => f.playerId === player.id.toString()); %>
+        <form action="<%= isFav ? '/favorite-player/removeFavorite' : '/favorite-player/addFavorite' %>" method="POST" class="mt-4">
+          <input type="hidden" name="playerId" value="<%= player.id %>">
+          <input type="hidden" name="firstName" value="<%= player.first_name %>">
+          <input type="hidden" name="lastName" value="<%= player.last_name %>">
+          <input type="hidden" name="team" value="<%= player.team.full_name %>">
+          <input type="hidden" name="position" value="<%= player.position %>">
+          <input type="hidden" name="heightFeet" value="<%= player.height_feet %>">
+          <input type="hidden" name="heightInches" value="<%= player.height_inches %>">
+          <input type="hidden" name="weightPounds" value="<%= player.weight_pounds %>">
+          <button type="submit" class="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500">
+            <%= isFav ? 'Remove from Favorites ⭐' : 'Add to Favorites ⭐' %>
+          </button>
+        </form>
+      </div>
+    <% } %>
+
+    <!-- Favorites List -->
+    <h3 class="text-xl font-semibold mb-2">Your Favorite Players</h3>
+    <% if (favorites.length === 0) { %>
+      <p>No favorite players yet.</p>
+    <% } else { %>
+      <ul class="space-y-2">
+        <% favorites.forEach(f => { %>
+          <li class="bg-white p-4 rounded shadow flex justify-between items-center">
+            <span><%= f.firstName %> <%= f.lastName %> - <%= f.team %></span>
+            <form action="/favorite-player/removeFavorite" method="POST">
+              <input type="hidden" name="playerId" value="<%= f.playerId %>">
+              <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Remove</button>
+            </form>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </main>
+</body>
+</html>

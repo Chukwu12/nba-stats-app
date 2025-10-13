@@ -34,3 +34,24 @@
   function closeInjuryReport() {
     document.getElementById("injuryModal").classList.add("hidden");
   }
+
+
+
+  document.querySelectorAll('.injury-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const playerData = JSON.parse(card.dataset.player);
+
+      const injuryInfo = playerData.injury
+        ? `<p><strong>Status:</strong> ${playerData.injury.status}</p>
+           <p><strong>Comment:</strong> ${playerData.injury.comment}</p>`
+        : '<p>No injury reported</p>';
+
+      Swal.fire({
+        title: `${playerData.first_name} ${playerData.last_name}`,
+        html: `<p><strong>Team:</strong> ${playerData.team}</p>${injuryInfo}`,
+        icon: playerData.injury ? 'warning' : 'success',
+        confirmButtonText: 'Close'
+      });
+    });
+  });
+

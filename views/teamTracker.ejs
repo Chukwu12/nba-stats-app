@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NBA Team Tracker</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="bg-gray-100 min-h-screen">
+<body id="team-tracker" class="bg-gray-100 min-h-screen">
   <div class="flex">
     <%- include('partials/sidebar') %>
 
     <main class="ml-64 flex-1 p-8">
 
       <!-- Search Section -->
-      <section id="teamtracker" class="min-h-screen flex items-center justify-center bg-cover bg-center" style="background-image: url('/img/basketball-img.jpg')">
-        <div class="form-box max-w-xl w-full bg-white/30 backdrop-blur-lg p-10 rounded-xl shadow-2xl text-center">
-          
+      <section class="min-h-screen bg-cover bg-center p-8" style="background-image: url('/img/basketball-img.jpg')">
+        <div class="bg-white/30 backdrop-blur-lg max-w-3xl mx-auto p-10 rounded-2xl shadow-2xl text-center">
           <h1 class="text-4xl font-extrabold text-blue-900 mb-6 tracking-tight">
-            Basketball Team Tracker <i class="fa-solid fa-basketball fa-bounce text-orange-500"></i>
+            NBA Team Tracker <i class="fa-solid fa-basketball fa-bounce text-orange-500"></i>
           </h1>
 
           <!-- Search Form -->
@@ -33,48 +34,102 @@
 
           <!-- Error Message -->
           <% if (error) { %>
-            <div class="bg-red-100 border border-red-300 text-red-700 p-4 rounded mb-4 shadow">
-              <%= error %>
-            </div>
+          <div class="bg-red-100 border border-red-300 text-red-700 p-4 rounded mb-4 shadow">
+            <%= error %>
+          </div>
           <% } %>
 
-          <!-- Team Info Display -->
+          <!-- Team Info Section -->
           <% if (info) { %>
-            <div class="bg-white/90 text-gray-900 rounded-xl p-6 text-left shadow-lg max-w-2xl mx-auto">
-              
-              <h2 class="text-3xl font-bold text-blue-800 mb-4"><%= info.full_name %></h2>
+          <div class="team-card">
 
-              <!-- API Info -->
-              <div class="mb-4 space-y-1">
-                <p><i class="fa-solid fa-location-dot text-blue-500 mr-2"></i><strong>City:</strong> <%= info.city %></p>
-                <p><i class="fa-solid fa-rectangle-list text-blue-500 mr-2"></i><strong>Abbreviation:</strong> <%= info.abbreviation %></p>
-                <p><i class="fa-solid fa-people-group text-blue-500 mr-2"></i><strong>Conference:</strong> <%= info.conference %></p>
-                <p><i class="fa-solid fa-layer-group text-blue-500 mr-2"></i><strong>Division:</strong> <%= info.division %></p>
+            <!-- Header with Logo -->
+            <div class="flex items-center justify-center gap-4 mb-6">
+              <img src="<%= logo || `/img/teams/${info.full_name.toLowerCase().replace(/ /g, '-')}.png` %>" alt="<%= info.full_name %> logo" class="team-logo w-24 h-24 object-contain drop-shadow-md" onerror="this.src='/img/default-team.png'">
+
+
+              <div>
+                <h2 class="text-3xl font-bold text-blue-800"><%= info.full_name %></h2>
+                <p class="text-gray-600"><i class="fa-solid fa-location-dot text-blue-500 mr-2"></i><%= info.city %></p>
               </div>
-
-              <!-- Divider -->
-              <hr class="my-4 border-gray-300">
-
-              <!-- Extra Stats -->
-              <% if (info.championships !== undefined) { %>
-                <h3 class="text-xl font-semibold text-blue-700 mb-2">🏆 Extra Stats</h3>
-                <ul class="list-disc pl-6 space-y-1">
-                  <li><strong>Championships:</strong> <%= info.championships %></li>
-                  <li><strong>Most 3s:</strong> <%= info['Most 3s'] %></li>
-                  <li><strong>Best Record:</strong> <%= info['best Record'] %></li>
-                </ul>
-              <% } else { %>
-                <p class="text-sm text-gray-500 italic">No additional stats available.</p>
-              <% } %>
-
-              <a href="/team-tracker" class="mt-6 inline-block text-blue-600 hover:underline text-sm">
-                ← Search another team
-              </a>
             </div>
+
+            <!-- Core Info -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-gray-800 mb-6">
+              <p><i class="fa-solid fa-rectangle-list text-blue-500 mr-2"></i><strong>Abbreviation:</strong> <%= info.abbreviation %></p>
+              <p><i class="fa-solid fa-people-group text-blue-500 mr-2"></i><strong>Conference:</strong> <%= info.conference %></p>
+              <p><i class="fa-solid fa-layer-group text-blue-500 mr-2"></i><strong>Division:</strong> <%= info.division %></p>
+              <% if (info.championships !== undefined) { %>
+              <p>🏆<strong>Championships:</strong> <%= info.championships %></p>
+              <p><i class="fa-solid fa-basketball" style="color: #3b82f6;"></i><strong>Most 3s:</strong> <%= info["Most 3s"] %></p>
+              <p><i class="fa-solid fa-chart-simple" style="color: #3b82f6;"></i><strong>Best Record:</strong> <%= info["best Record"] %></p>
+              <% } %>
+            </div>
+
+
+
+
+            <!-- Chart Section -->
+            <div class="chart-container bg-white p-4 rounded-lg shadow-md">
+              <h3 class="text-xl font-semibold text-blue-700 mb-2">Team Performance Overview</h3>
+              <canvas id="teamChart" height="120"></canvas>
+            </div>
+
+            <a href="/team-tracker" class="mt-6 inline-block text-blue-600 hover:underline text-sm">
+              ← Search another team
+            </a>
+          </div>
           <% } %>
         </div>
       </section>
     </main>
   </div>
+
+  <% if (info) { %>
+  <script>
+    // Placeholder data for the chart — later can be replaced with real stats
+    const ctx = document.getElementById('teamChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Wins', 'Losses', '3PT%', 'FG%', 'Rebounds'],
+        datasets: [{
+          label: '<%= info.full_name %> Stats Overview',
+          data: [55, 27, 38, 47, 44], // temporary mock values
+          backgroundColor: ['#2563eb', '#dc2626', '#f97316', '#16a34a', '#9333ea'],
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            text: 'Season Snapshot',
+            color: '#1e3a8a'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#1e293b'
+            }
+          },
+          x: {
+            ticks: {
+              color: '#1e293b'
+            }
+          }
+        }
+      }
+    });
+  </script>
+  <% } %>
+  <script src='js/teams.js'></script>
 </body>
+
 </html>

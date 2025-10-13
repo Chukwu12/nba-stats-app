@@ -1,13 +1,18 @@
 const express = require('express')
 const app = express()
 const path = require('path');
+const connectDB = require('./config/database');
 
+
+// Connect to MongoDB
+connectDB();
 
 
 // Import routes
 const playerRoutes = require('./routes/players');
 const teamRoutes = require('./routes/teaminfo');
 const injuryReportRoute = require("./routes/injuryReport");
+const favoritePlayerRoutes = require('./routes/favoritePlayer');
 
 
 // Load environment variables
@@ -40,6 +45,7 @@ app.use(express.json())
 // Routes usage
 app.use('/players', playerRoutes);  // for player details
 app.use('/', teamRoutes);   
+app.use('/', favoritePlayerRoutes);
 app.get('/', (req, res) => {
   res.render('index'); //  views/index.ejs
 });
