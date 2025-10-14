@@ -11,12 +11,11 @@ exports.renderFavorites = async (req, res) => {
 
     // Render page with favorites, no specific player yet
     res.render('favorite-player', { player: null, favorites, error: null });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res.render('favorite-player', { player: null, favorites: [], error: 'Could not load favorites' });
   }
 };
-
 // Search player by name
 exports.searchPlayer = async (req, res) => {
   const { playerName } = req.body;

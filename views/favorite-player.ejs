@@ -4,38 +4,72 @@
   <meta charset="UTF-8">
   <title>Favorite Players</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="bg-gray-100 text-gray-900 font-sans">
+<body class="bg-gray-100 text-gray-900 font-sans min-h-screen flex">
+
+  <!-- Sidebar -->
   <%- include('partials/sidebar') %>
 
-  <main class="ml-64 p-8">
-    <h1 class="text-3xl font-bold mb-6">Favorite Players</h1>
+  <!-- Main Content -->
+  <main class="flex-1 ml-64 p-8">
+    <!-- Title -->
+    <h1 class="text-3xl font-bold mb-8 text-blue-700 flex items-center gap-2">
+      <img class="favoirite-gif" src="">
+      Favorite Players
+    </h1>
 
     <!-- Search Form -->
-    <form action="/favorite-player/searchPlayer" method="POST" class="mb-6 flex gap-2">
-      <input type="text" name="playerName" placeholder="Enter Player Name" class="p-2 border rounded flex-1" required>
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Search</button>
-    </form>
+    <section class="bg-white p-6 rounded-lg shadow mb-10">
+      <form action="/favorite-player/searchPlayer" method="POST" class="flex gap-3">
+        <input 
+          type="text" 
+          name="playerName" 
+          placeholder="Search NBA Player..." 
+          class="p-3 border border-gray-300 rounded flex-1 focus:ring-2 focus:ring-blue-400 outline-none"
+          required
+        >
+        <button 
+          type="submit" 
+          class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition"
+        >
+          Search
+        </button>
+      </form>
 
-    <!-- Error Message -->
-    <% if (error) { %>
-      <p class="text-red-500 mb-4"><%= error %></p>
-    <% } %>
+      <% if (error) { %>
+        <p class="text-red-500 mt-3"><%= error %></p>
+      <% } %>
+    </section>
 
-    <!-- Player Info -->
+    <!-- Player Search Result -->
     <% if (player) { %>
-      <div class="bg-white p-6 rounded-lg shadow mb-6">
-        <h2 class="text-2xl font-bold mb-2"><%= player.first_name %> <%= player.last_name %></h2>
-        <p>Team: <%= player.team.full_name %></p>
-        <p>Position: <%= player.position %></p>
-        <p>Height: <%= player.height_feet %>' <%= player.height_inches %>"</p>
-        <p>Weight: <%= player.weight_pounds %> lbs</p>
+      <section class="bg-white p-6 rounded-lg shadow mb-10 animate-fadeIn">
+        <h2 class="text-2xl font-bold mb-3"><%= player.first_name %> <%= player.last_name %></h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-gray-700">
+          <p><strong>Team:</strong> <%= player.team.full_name %></p>
+          <p><strong>Position:</strong> <%= player.position || 'N/A' %></p>
+          <p><strong>Height:</strong> <%= player.height_feet || '-' %>' <%= player.height_inches || '-' %>"</p>
+          <p><strong>Weight:</strong> <%= player.weight_pounds || '-' %> lbs</p>
+          <p><strong>Conference:</strong> <%= player.team.conference %></p>
+          <p><strong>Division:</strong> <%= player.team.division %></p>
+        </div>
 
         <% const isFav = favorites.some(f => f.playerId === player.id.toString()); %>
-        <form action="<%= isFav ? '/favorite-player/removeFavorite' : '/favorite-player/addFavorite' %>" method="POST" class="mt-4">
+        <form 
+          action="<%= isFav ? '/favorite-player/removeFavorite' : '/favorite-player/addFavorite' %>" 
+          method="POST" 
+          class="mt-6"
+        >
           <input type="hidden" name="playerId" value="<%= player.id %>">
           <input type="hidden" name="firstName" value="<%= player.first_name %>">
           <input type="hidden" name="lastName" value="<%= player.last_name %>">
@@ -44,30 +78,101 @@
           <input type="hidden" name="heightFeet" value="<%= player.height_feet %>">
           <input type="hidden" name="heightInches" value="<%= player.height_inches %>">
           <input type="hidden" name="weightPounds" value="<%= player.weight_pounds %>">
-          <button type="submit" class="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500">
+
+          <button 
+            type="submit" 
+            class="<%= isFav 
+              ? 'bg-red-500 hover:bg-red-600' 
+              : 'bg-yellow-400 hover:bg-yellow-500' 
+            %> text-black px-6 py-2 rounded transition"
+            id="favBtn"
+          >
             <%= isFav ? 'Remove from Favorites ⭐' : 'Add to Favorites ⭐' %>
           </button>
         </form>
-      </div>
+      </section>
     <% } %>
 
     <!-- Favorites List -->
-    <h3 class="text-xl font-semibold mb-2">Your Favorite Players</h3>
-    <% if (favorites.length === 0) { %>
-      <p>No favorite players yet.</p>
+    <section>
+      <h3 class="text-2xl font-semibold mb-4 text-gray-800">Your Favorite Players</h3>
+
+      <% if (favorites.length === 0) { %>
+        <p class="text-gray-500">You haven’t added any favorite players yet.</p>
+      <% } else { %>
+        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% favorites.forEach(f => { %>
+            <li class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition flex flex-col justify-between">
+              <div>
+                <h4 class="text-xl font-bold mb-2 text-blue-700"><%= f.firstName %> <%= f.lastName %></h4>
+                <p class="text-gray-700">Team: <%= f.team %></p>
+                <p class="text-gray-700">Position: <%= f.position || 'N/A' %></p>
+              </div>
+              <form action="/favorite-player/removeFavorite" method="POST" class="mt-4">
+                <input type="hidden" name="playerId" value="<%= f.playerId %>">
+                <button 
+                  type="submit" 
+                  class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition w-full"
+                >
+                  Remove
+                </button>
+              </form>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </section>
+
+    <section class="p-8 bg-gray-100 min-h-screen">
+  <h2 class="text-3xl font-bold text-center mb-8">My Favorite Players</h2>
+
+  <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
+    <% if (favorites.length > 0) { %>
+      <% favorites.forEach(fav => { %>
+        <div class="group bg-white rounded-2xl shadow-md p-4 cursor-pointer hover:scale-105 transition-transform">
+          <a href="/player/<%= fav.playerId %>">
+            <img src="/images/default-player.png" alt="<%= fav.firstName %> <%= fav.lastName %>" 
+                 class="rounded-full w-32 h-32 mx-auto shadow-md">
+            <h3 class="text-xl font-semibold mt-4 text-center"><%= fav.firstName %> <%= fav.lastName %></h3>
+            <p class="text-gray-500 text-sm text-center"><%= fav.team %></p>
+          </a>
+        </div>
+      <% }) %>
     <% } else { %>
-      <ul class="space-y-2">
-        <% favorites.forEach(f => { %>
-          <li class="bg-white p-4 rounded shadow flex justify-between items-center">
-            <span><%= f.firstName %> <%= f.lastName %> - <%= f.team %></span>
-            <form action="/favorite-player/removeFavorite" method="POST">
-              <input type="hidden" name="playerId" value="<%= f.playerId %>">
-              <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Remove</button>
-            </form>
-          </li>
-        <% }) %>
-      </ul>
+      <p class="text-center text-gray-500 col-span-full">No favorite players yet.</p>
     <% } %>
+  </div>
+</section>
+
   </main>
+
+
+
+
+
+
+
+  <script>
+    // Fade-in animation
+    document.addEventListener("DOMContentLoaded", () => {
+      const fadeEls = document.querySelectorAll('.animate-fadeIn');
+      fadeEls.forEach(el => {
+        el.style.opacity = 0;
+        el.style.transition = 'opacity 0.5s ease';
+        setTimeout(() => { el.style.opacity = 1; }, 100);
+      });
+    });
+
+    // SweetAlert feedback (optional: you can call this via controller redirect with query)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('added') === 'true') {
+      Swal.fire({
+        icon: 'success',
+        title: 'Player added to favorites!',
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+  </script>
 </body>
 </html>

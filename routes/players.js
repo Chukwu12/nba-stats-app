@@ -1,18 +1,8 @@
 const express = require("express");
 const axios = require("axios");
 const router = express.Router();
-// const playersController = require("../controllers/players");
+const playerController = require("../controllers/players");
 
-// Base route — renders the search form
-// // router.get("/", (req, res) => {
-// //   res.render("players", {  players: [], error: null, search: ""});
-// // });
-
-// Search route — ?name=LeBron
-// router.get("/search", playersController.searchPlayer);
-
-// Player detail route — /players/:id
-// router.get("/:id", playersController.getPlayerDetails);
 
 
 // balldontlie api's
@@ -71,6 +61,13 @@ router.get("/:id", async (req, res) => {
     res.status(500).render("player-detail", { player: null, error: "Could not fetch player details." });
   }
 });
+
+//fetch favorite player data
+router.get("/favorite", playerController.FavoritePlayer);
+
+// Full player detail page
+router.get('/:id', playerController.renderPlayerDetails);
+
 
 
 

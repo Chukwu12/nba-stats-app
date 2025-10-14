@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const favoriteController = require('../controllers/favorite');
 
-// Render favorites page
+// Display favorite players
 router.get('/', favoriteController.renderFavorites);
 
 // Search for a player
@@ -13,5 +13,7 @@ router.post('/addFavorite', favoriteController.addFavorite);
 
 // Remove player from favorites
 router.post('/removeFavorite', favoriteController.removeFavorite);
+
+
 
 module.exports = router;

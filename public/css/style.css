@@ -472,3 +472,9 @@ body#team-tracker {
   max-width: 100%;
   margin: 0 auto;
 }
+
+/* Favorite player */
+.favoirite-gif{
+height:50px;
+width: 50px;
+}

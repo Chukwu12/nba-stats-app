@@ -1,6 +1,10 @@
+// Load environment variables
+require('dotenv').config();
+
 const express = require('express')
 const app = express()
 const path = require('path');
+const mongoose = require('mongoose');
 const connectDB = require('./config/database');
 
 
@@ -15,8 +19,7 @@ const injuryReportRoute = require("./routes/injuryReport");
 const favoritePlayerRoutes = require('./routes/favoritePlayer');
 
 
-// Load environment variables
-require('dotenv').config();
+
 
 // let db,
 //     collection, // Define the collection variable
@@ -43,19 +46,15 @@ app.use(express.json())
 
 
 // Routes usage
-app.use('/players', playerRoutes);  // for player details
-app.use('/', teamRoutes);   
-app.use('/', favoritePlayerRoutes);
-app.get('/', (req, res) => {
-  res.render('index'); //  views/index.ejs
-});
-app.use('/injury-report', require('./routes/injuryReport')); // shows injury report
-app.use("/api", require("./routes/players"));
+app.use('/players', playerRoutes);        // for player details
+app.use('/', teamRoutes);                 // for team info
+app.use('/favorite-player', favoritePlayerRoutes); // favorite platers
+app.use('/injury-report', require('./routes/injuryReport')); // injury report
+app.use('/api', require('./routes/players'));
 
-// players.ejs page
-// app.get("/players", (req, res) => {
-//   res.render("players");
-// });
+app.get('/', (req, res) => {
+  res.render('index'); // views/index.ejs
+});
 
 const PORT = process.env.PORT || 2121;
 
