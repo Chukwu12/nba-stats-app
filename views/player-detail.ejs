@@ -4,10 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= player.first_name %> <%= player.last_name %> | NBA Stats</title>
+  <title>
+    <%= player?.first_name || 'Player' %> <%= player?.last_name || '' %> | NBA Stats
+  </title>
   <script src="https://cdn.tailwindcss.com"></script>
-  
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" /><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 
@@ -16,54 +18,93 @@
   <div class="flex min-h-screen">
     <%- include('partials/sidebar') %>
 
-    <main class="ml-64 flex-1 p-8 flex items-start justify-center">
-      <div class="max-w-4xl w-full bg-white p-8 rounded-xl shadow-lg flex flex-col md:flex-row gap-8">
+    <main class="ml-64 flex-1 p-8 flex flex-col items-center">
 
-        <!-- Image -->
-        <img src="<%='/img/default.jpeg' %>" alt="<%= player.fullName %>" class="w-64 h-64 object-cover rounded-lg shadow mx-auto md:mx-0">
-
-        <!-- Info -->
-        <div class="flex-1">
-          <h1 class="text-4xl font-bold mb-6 text-center md:text-left"><%= player.fullName %></h1>
-
-          <ul class="bg-gray-50 p-6 rounded-lg shadow space-y-2">
-            <li><strong>Team:</strong> <%= player.team || 'N/A' %></li>
-            <li><strong>Position:</strong> <%= player.position || 'N/A' %></li>
-            <li><strong>Jersey:</strong> #<%= player.jersey_number || 'N/A' %></li>
-            <li><strong>Height:</strong> <%= player.height || 'N/A' %></li>
-            <li><strong>Weight:</strong> <%= player.weight || 'N/A' %></li>
-            <li><strong>College:</strong> <%= player.college || 'N/A' %></li>
-          </ul>
-
-
-          <% if (player.links && player.links[0]) { %>
-          <a href="<%= player.links[0].href %>" target="_blank" class="block mt-6 text-blue-600 hover:underline font-semibold">
-            View on ESPN →
-          </a>
-          <% } %>
-
-          <a href="/players" class="block mt-4 text-blue-500 hover:underline">← Back to Players</a>
+      <% if (error) { %>
+        <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-6 shadow w-full max-w-2xl text-center">
+          <%= error %>
         </div>
-      </div>
+      <% } %>
+
+      <% if (player) { %>
+        <div class="max-w-4xl w-full bg-white p-8 rounded-xl shadow-lg flex flex-col md:flex-row gap-8">
+
+          <!-- Player Image -->
+          <img
+            src="<%='/img/default.jpeg' %>"
+            alt="<%= player?.first_name + ' ' + player?.last_name %>"
+            class="w-64 h-64 object-cover rounded-xl shadow-lg ring-4 ring-blue-200 mx-auto md:mx-0"
+          />
+
+          <!-- Player Info -->
+          <div class="flex-1">
+            <h1 class="text-4xl font-bold mb-6 text-center md:text-left">
+              <%= player?.first_name %> <%= player?.last_name %>
+            </h1>
+
+            <ul class="bg-gray-50 p-6 rounded-lg shadow space-y-2">
+              <li><strong>Team:</strong> <%= player?.team || 'N/A' %></li>
+              <li><strong>Position:</strong> <%= player?.position || 'N/A' %></li>
+              <li><strong>Jersey:</strong> #<%= player?.jersey_number || 'N/A' %></li>
+              <li><strong>Height:</strong> <%= player?.height || 'N/A' %></li>
+              <li><strong>Weight:</strong> <%= player?.weight || 'N/A' %></li>
+              <li><strong>College:</strong> <%= player?.college || 'N/A' %></li>
+            </ul>
+
+            <% if (player?.links && player.links[0]) { %>
+              <a href="<%= player.links[0].href %>" target="_blank" class="block mt-6 text-blue-600 hover:underline font-semibold">
+                View on ESPN →
+              </a>
+            <% } %>
+
+            <a href="/players" class="block mt-4 text-blue-500 hover:underline">← Back to Players</a>
+
+            <% if (!favorite) { %>
+              <form action="/favorite-player/addFavorite" method="POST" class="mt-6">
+                <input type="hidden" name="playerId" value="<%= player?.id %>">
+                <input type="hidden" name="firstName" value="<%= player?.first_name %>">
+                <input type="hidden" name="lastName" value="<%= player?.last_name %>">
+                <input type="hidden" name="team" value="<%= player?.team %>">
+                <button 
+                  type="submit"
+                  class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-2 rounded-lg transition flex items-center gap-2"
+                >
+                  <i class="fa-solid fa-star"></i> Add to Favorites
+                </button>
+              </form>
+            <% } else { %>
+              <p class="mt-6 text-green-600 font-semibold flex items-center gap-2">
+                <i class="fa-solid fa-check"></i> Already in Favorites
+              </p>
+            <% } %>
+
+          </div>
+        </div>
+
+        <!-- Player Stats -->
+        <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 max-w-4xl w-full">
+          <div class="bg-blue-50 rounded-xl p-4 text-center shadow">
+            <h3 class="text-3xl font-bold text-blue-600"><%= stats?.ppg || 'N/A' %></h3>
+            <p class="text-gray-600 font-medium">Points</p>
+          </div>
+          <div class="bg-green-50 rounded-xl p-4 text-center shadow">
+            <h3 class="text-3xl font-bold text-green-600"><%= stats?.apg || 'N/A' %></h3>
+            <p class="text-gray-600 font-medium">Assists</p>
+          </div>
+          <div class="bg-yellow-50 rounded-xl p-4 text-center shadow">
+            <h3 class="text-3xl font-bold text-yellow-600"><%= stats?.rpg || 'N/A' %></h3>
+            <p class="text-gray-600 font-medium">Rebounds</p>
+          </div>
+        </section>
+      <% } %>
+
     </main>
   </div>
 
   <script>
-    // Animate player page
-    gsap.from("h1", {
-      opacity: 0,
-      y: -30,
-      duration: 1
-    });
-    gsap.from("ul li", {
-      opacity: 0,
-      y: 20,
-      stagger: 0.1,
-      duration: 0.5,
-      delay: 0.3
-    });
+    gsap.from("h1", { opacity: 0, y: -30, duration: 1 });
+    gsap.from("ul li", { opacity: 0, y: 20, stagger: 0.1, duration: 0.5, delay: 0.3 });
   </script>
 
 </body>
-
 </html>

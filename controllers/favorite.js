@@ -1,6 +1,8 @@
 const FavoritePlayer = require('../models/favoritePlayer'); // Make sure this model exists
 const axios = require('axios');
 
+//environment variable key
+const BALDONTLIE_API_KEY = process.env.NBA_API_KEY;
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
 
 // Render the favorite players page
@@ -16,23 +18,35 @@ exports.renderFavorites = async (req, res) => {
     res.render('favorite-player', { player: null, favorites: [], error: 'Could not load favorites' });
   }
 };
+
+
 // Search player by name
 exports.searchPlayer = async (req, res) => {
   const { playerName } = req.body;
   try {
-    const response = await axios.get('https://www.balldontlie.io/api/v1/players', {
-      params: { search: playerName }
+    const response = await axios.get('https://api.balldontlie.io/v1/players', {
+      params: { search: playerName },
+      headers: {
+        Authorization: `${BALDONTLIE_API_KEY}`
+      }
     });
+
+      const players = response.data.data;
+
+       if (!players || players.length === 0) {
+      return res.render('favorite-player', { player: null, favorites: [], error: 'Player not found' });
+    }
+
+    const player = players[0];
+    const favorites = await FavoritePlayer.find({});
 
     if (response.data.data.length === 0) {
       return res.render('favorite-player', { player: null, favorites: [], error: 'Player not found' });
     }
 
-    const player = response.data.data[0]; // pick first match
-    const favorites = await FavoritePlayer.find({});
     res.render('favorite-player', { player, favorites, error: null });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching player:", error.message);
     res.render('favorite-player', { player: null, favorites: [], error: 'Error fetching player' });
   }
 };

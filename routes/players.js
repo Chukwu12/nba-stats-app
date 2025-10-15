@@ -31,36 +31,36 @@ router.get("/", async (req, res) => {
 });
 
 // Player detail route
-router.get("/:id", async (req, res) => {
-  const playerId = req.params.id;
+// router.get("/:id", async (req, res) => {
+//   const playerId = req.params.id;
 
-  try {
-    const response = await axios.get(`https://api.balldontlie.io/v1/players/${playerId}`, {
-      headers: { Authorization: `${process.env.NBA_API_KEY}` }
-    });
+//   try {
+//     const response = await axios.get(`https://api.balldontlie.io/v1/players/${playerId}`, {
+//       headers: { Authorization: `${process.env.NBA_API_KEY}` }
+//     });
 
-    const p = response.data.data; // correct field
-    if (!p) return res.status(404).render("player-detail", { player: null, error: "Player not found" });
+//     const p = response.data.data; // correct field
+//     if (!p) return res.status(404).render("player-detail", { player: null, error: "Player not found" });
 
-    const player = {
-      id: p.id,
-      first_name: p.first_name,
-      last_name: p.last_name,
-      position: p.position || "N/A",
-      team: p.team ? p.team.full_name : "N/A",
-      height: p.height || "N/A",
-      weight: p.weight || "N/A",
-      jersey_number: p.jersey_number || "N/A",
-      college: p.college || "N/A",
-      image: `https://nba-players.herokuapp.com/players/${p.last_name.toLowerCase()}/${p.first_name.toLowerCase()}`
-    };
+//     const player = {
+//       id: p.id,
+//       first_name: p.first_name,
+//       last_name: p.last_name,
+//       position: p.position || "N/A",
+//       team: p.team ? p.team.full_name : "N/A",
+//       height: p.height || "N/A",
+//       weight: p.weight || "N/A",
+//       jersey_number: p.jersey_number || "N/A",
+//       college: p.college || "N/A",
+//       image: `https://nba-players.herokuapp.com/players/${p.last_name.toLowerCase()}/${p.first_name.toLowerCase()}`
+//     };
 
-    res.render("player-detail", { player, error: null });
-  } catch (err) {
-    console.error("❌ Error fetching player details:", err.message);
-    res.status(500).render("player-detail", { player: null, error: "Could not fetch player details." });
-  }
-});
+//     res.render("player-detail", { player, error: null });
+//   } catch (err) {
+//     console.error("❌ Error fetching player details:", err.message);
+//     res.status(500).render("player-detail", { player: null, error: "Could not fetch player details." });
+//   }
+// });
 
 //fetch favorite player data
 router.get("/favorite", playerController.FavoritePlayer);

@@ -1,6 +1,10 @@
 const axios = require("axios");
 const FavoritePlayer = require('../models/favoritePlayer');
 
+// environment variable key
+const BALDONTLIE_API_KEY = process.env.NBA_API_KEY;
+const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
+
 exports.searchPlayer = async (req, res) => {
   const name = req.query.name; // from GET /players/search?name=
   console.log("🔎 Searching for player:", name);
@@ -79,33 +83,49 @@ exports.FavoritePlayer = async (req, res) => {
   }
 };
 
+
+// 🔎 View player details (with stats + optional image)
 exports.renderPlayerDetails = async (req, res) => {
   try {
     const playerId = req.params.id;
 
-    // First, check if player is in favorites
-    const favorite = await FavoritePlayer.findOne({ playerId });
-
-    // 1️⃣ Get player info from Balldontlie
-    const playerRes = await axios.get(`https://www.balldontlie.io/api/v1/players/${playerId}`);
+    // 1️⃣ Fetch player info
+    const playerRes = await axios.get(`https://api.balldontlie.io/v1/players/${playerId}`, {
+      headers: { Authorization: `${BALDONTLIE_API_KEY}` }
+    });
     const player = playerRes.data;
 
-    // 2️⃣ Get season stats
-    const statsRes = await axios.get(`https://www.balldontlie.io/api/v1/season_averages?player_ids[]=${playerId}`);
-    const stats = statsRes.data.data[0] || {};
-
-    // 3️⃣ Optional: get player image from RapidAPI NBA API
-    const imageRes = await axios.get(`https://api-nba-v1.p.rapidapi.com/players/images?name=${player.first_name}%20${player.last_name}`, {
-      headers: {
-        'x-rapidapi-key': process.env.RAPIDAPI_KEY,
-        'x-rapidapi-host': 'api-nba-v1.p.rapidapi.com'
-      }
+    // 2️⃣ Fetch season averages
+    const statsRes = await axios.get(`https://api.balldontlie.io/v1/season_averages`, {
+      params: { 'player_ids[]': playerId },
+      headers: { Authorization: `${BALDONTLIE_API_KEY}` }
     });
-    const image = imageRes.data?.response?.[0]?.image || '/images/default-player.png';
+    const statData = statsRes.data.data[0] || {};
 
-    res.render('player-details', { player, stats, image, favorite });
+    const stats = {
+      ppg: statData.pts || 'N/A',
+      apg: statData.ast || 'N/A',
+      rpg: statData.reb || 'N/A'
+    };
+
+    // 3️⃣ Fetch player image from RapidAPI (optional)
+    let image = '/images/default-player.png';
+    try {
+      const imageRes = await axios.get(`https://api-nba-v1.p.rapidapi.com/players/images?name=${player.first_name}%20${player.last_name}`, {
+        headers: {
+          'x-rapidapi-key': RAPIDAPI_KEY,
+          'x-rapidapi-host': 'api-nba-v1.p.rapidapi.com'
+        }
+      });
+      image = imageRes.data?.response?.[0]?.image || image;
+    } catch (imgErr) {
+      console.warn("No image found for player:", player.first_name, player.last_name);
+    }
+
+    const favorite = await FavoritePlayer.findOne({ playerId });
+    res.render('player-details', { player,  stats: stats || {}, image: image || '/img/default.jpeg', favorite, error: null });
   } catch (err) {
-    console.error(err);
+    console.error("Error rendering player details:", err.message);
     res.render('player-details', { player: null, stats: null, image: null, favorite: null, error: 'Could not load player details' });
   }
 };
