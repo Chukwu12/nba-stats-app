@@ -59,8 +59,8 @@
         <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-gray-700">
           <p><strong>Team:</strong> <%= player.team.full_name %></p>
           <p><strong>Position:</strong> <%= player.position || 'N/A' %></p>
-          <p><strong>Height:</strong> <%= player.height_feet || '-' %>' <%= player.height_inches || '-' %>"</p>
-          <p><strong>Weight:</strong> <%= player.weight_pounds || '-' %> lbs</p>
+          <p><strong>Height:</strong> <%= player.height_feet || 'N/A' %>' <%= player.height_inches || '' %>"</p>
+          <p><strong>Weight:</strong> <%= player.weight_pounds || 'N/A' %> lbs</p>
           <p><strong>Conference:</strong> <%= player.team.conference %></p>
           <p><strong>Division:</strong> <%= player.team.division %></p>
         </div>
@@ -104,30 +104,29 @@
       <% } else { %>
         <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
           <% favorites.forEach(fav => { %>
-            <div class="group bg-white rounded-2xl shadow-md p-6 cursor-pointer hover:scale-105 transition-transform flex flex-col items-center">
-              <img src="/images/default-player.png" alt="<%= fav.firstName %> <%= fav.lastName %>" 
-                   class="rounded-full w-28 h-28 shadow-md mb-4">
-              <h3 class="text-xl font-semibold text-center"><%= fav.firstName %> <%= fav.lastName %></h3>
-              <p class="text-gray-500 text-sm text-center mb-4"><%= fav.team %></p>
-
-              <form action="/favorite-player/removeFavorite" method="POST" class="w-full">
-                <input type="hidden" name="playerId" value="<%= fav.playerId %>">
-                <button 
-                  type="submit" 
-                  class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition w-full"
-                >
-                  Remove
-                </button>
-              </form>
-            </div>
+            <a href="/favorite-player/<%= fav.playerId %>" class="w-full">
+              <div class="group bg-white rounded-2xl shadow-md p-6 cursor-pointer hover:scale-105 transition-transform flex flex-col items-center">
+                <img src="/img/default.jpeg" alt="<%= fav.firstName %> <%= fav.lastName %>" 
+                     class="rounded-full w-28 h-28 shadow-md mb-4">
+                <h3 class="text-xl font-semibold text-center"><%= fav.firstName %> <%= fav.lastName %></h3>
+                <p class="text-gray-500 text-sm text-center mb-4"><%= fav.team %></p>
+              </div>
+            </a>
+            <form action="/favorite-player/removeFavorite" method="POST" class="w-full mt-2">
+              <input type="hidden" name="playerId" value="<%= fav.playerId %>">
+              <button 
+                type="submit" 
+                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition w-full"
+              >
+                Remove
+              </button>
+            </form>
           <% }) %>
         </div>
       <% } %>
     </section>
-
   </main>
 
-  <!-- Scripts -->
   <script>
     // Fade-in animation for search results
     document.addEventListener("DOMContentLoaded", () => {
@@ -138,18 +137,6 @@
         setTimeout(() => { el.style.opacity = 1; }, 100);
       });
     });
-
-    // SweetAlert feedback for adding a favorite
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('added') === 'true') {
-      Swal.fire({
-        icon: 'success',
-        title: 'Player added to favorites!',
-        showConfirmButton: false,
-        timer: 1500
-      });
-    }
   </script>
-
 </body>
 </html>

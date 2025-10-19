@@ -2,7 +2,7 @@ const axios = require("axios");
 const FavoritePlayer = require('../models/favoritePlayer');
 
 // environment variable key
-const BALDONTLIE_API_KEY = process.env.NBA_API_KEY;
+// const BALDONTLIE_API_KEY = process.env.NBA_API_KEY;
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
 
 exports.searchPlayer = async (req, res) => {
@@ -91,14 +91,14 @@ exports.renderPlayerDetails = async (req, res) => {
 
     // 1️⃣ Fetch player info
     const playerRes = await axios.get(`https://api.balldontlie.io/v1/players/${playerId}`, {
-      headers: { Authorization: `${BALDONTLIE_API_KEY}` }
+      headers: { Authorization: `${NBA_API_KEY}` }
     });
     const player = playerRes.data;
 
     // 2️⃣ Fetch season averages
     const statsRes = await axios.get(`https://api.balldontlie.io/v1/season_averages`, {
       params: { 'player_ids[]': playerId },
-      headers: { Authorization: `${BALDONTLIE_API_KEY}` }
+      headers: { Authorization: `${NBA_API_KEY}` }
     });
     const statData = statsRes.data.data[0] || {};
 

@@ -27,7 +27,7 @@ async function getInjuryData() {
 async function getPlayerData() {
   try {
     const res = await axios.get("https://api.balldontlie.io/v1/players", {
-      params: { per_page: 100 },
+      params: { per_page: 50 },
       headers: {
         Authorization: process.env.NBA_API_KEY // If required by your key
       }

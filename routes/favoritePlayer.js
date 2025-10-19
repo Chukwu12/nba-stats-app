@@ -14,6 +14,7 @@ router.post('/addFavorite', favoriteController.addFavorite);
 // Remove player from favorites
 router.post('/removeFavorite', favoriteController.removeFavorite);
 
-
+//Render favorite player details 
+router.get('/:id', favoriteController.renderFavoriteDetails);
 
 module.exports = router;

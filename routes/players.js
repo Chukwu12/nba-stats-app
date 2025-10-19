@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
 
   try {
     const response = await axios.get(`https://api.balldontlie.io/v1/players?search=${search}`, {
-      headers: { Authorization: `${process.env.NBA_API_KEY}` } // not required for BallDon’tLie but safe to keep
+      headers: { Authorization: `${process.env.NBA_API_KEY}` }
     });
 
     const players = response.data.data.map(p => ({
