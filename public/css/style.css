@@ -44,6 +44,16 @@ h2 {
   height: 100vh;
 }
 
+.sidebar-link {
+  @apply flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 font-medium transition-all duration-200;
+}
+
+.sidebar-link:hover {
+  @apply bg-gray-800 text-white translate-x-1 shadow;
+}
+
+
+
 main {
   margin-left: 16rem;
   /* match sidebar width */

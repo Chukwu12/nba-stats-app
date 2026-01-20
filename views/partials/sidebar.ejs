@@ -1,32 +1,70 @@
-<!-- views/partials/sidebar.ejs -->
-<aside class="w-64 h-screen bg-gray-900 text-white flex flex-col fixed top-0 left-0 shadow-lg">
-  <div class="px-6 py-4 text-2xl font-bold border-b border-gray-700">
-    🏀 NBA Tracker
+<!-- Sidebar Overlay for Mobile -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden"></div>
+
+<!-- Sidebar -->
+<aside
+  id="sidebar"
+  class="fixed top-0 left-0 z-40 h-full w-64 bg-gray-900 text-white
+         transform -translate-x-full transition-transform duration-300
+         md:translate-x-0 md:static md:flex flex-col"
+>
+  <!-- Brand/Header -->
+  <div class="px-6 py-4 text-2xl font-bold border-b border-gray-700 flex items-center justify-between">
+    🏀 <span class="ml-2">NBA Tracker</span>
+    <!-- Mobile Close Button -->
+    <button id="sidebar-close" class="md:hidden text-gray-400 hover:text-white">
+      <i class="fas fa-times"></i>
+    </button>
   </div>
-  <nav class="flex-1 px-4 py-6 space-y-4">
-    <a href="/" class="flex items-center gap-3 p-2 rounded hover:bg-gray-800 transition">
-      <i class="fas fa-home"></i>
-      <span>Home</span>
-    </a>
-    <a href="/team-tracker" class="flex items-center gap-3 p-2 rounded hover:bg-gray-800 transition">
-      <i class="fas fa-basketball-ball"></i>
-      <span>Team Tracker</span>
-    </a>
-    <a href="/players" class="flex items-center gap-3 p-2 rounded hover:bg-gray-800 transition">
-      <i class="fas fa-user"></i>
-      <span>Players</span>
-    </a>
-    <!-- views/partials/sidebar.ejs -->
-    <a href="/injury-report" class="flex items-center gap-3 p-2 rounded hover:bg-gray-800 transition">
-  <i class="fas fa-notes-medical"></i>
-  <span>Injury Report</span>
-</a>
-  <a href="/favorite-player" class="flex items-center gap-3 p-2 rounded hover:bg-gray-800 transition">
-  <i class="fa-solid fa-star"></i>
-  <span>Favorite Player</span>
-</a>
 
+  <!-- Navigation -->
+  <nav class="flex-1 px-4 py-6 space-y-6 text-sm">
+    
+    <!-- Main Section -->
+    <div>
+      <p class="px-4 mb-2 text-xs uppercase tracking-wider text-gray-400">
+        Main
+      </p>
+      <a href="/" class="sidebar-link <%= activePage === 'home' ? 'bg-blue-600 text-white shadow-lg' : '' %>">
+        <i class="fas fa-home w-5"></i>
+        <span>Home</span>
+      </a>
+      <a href="/team-tracker" class="sidebar-link <%= activePage === 'team-tracker' ? 'bg-blue-600 text-white shadow-lg' : '' %>">
+        <i class="fas fa-basketball-ball w-5"></i>
+        <span>Team Tracker</span>
+      </a>
+    </div>
 
+    <!-- Data Section -->
+    <div>
+      <p class="px-4 mb-2 text-xs uppercase tracking-wider text-gray-400">
+        Data
+      </p>
+      <a href="/players" class="sidebar-link <%= activePage === 'players' ? 'bg-blue-600 text-white shadow-lg' : '' %>">
+        <i class="fas fa-user w-5"></i>
+        <span>Players</span>
+      </a>
+      <a href="/injury-report" class="sidebar-link <%= activePage === 'injury-report' ? 'bg-blue-600 text-white shadow-lg' : '' %>">
+        <i class="fas fa-notes-medical w-5"></i>
+        <span>Injury Report</span>
+      </a>
+    </div>
+
+    <!-- Personal Section -->
+    <div>
+      <p class="px-4 mb-2 text-xs uppercase tracking-wider text-gray-400">
+        Personal
+      </p>
+      <a href="/favorite-player" class="sidebar-link <%= activePage === 'favorite-player' ? 'bg-yellow-500 text-black shadow-lg' : '' %>">
+        <i class="fa-solid fa-star w-5"></i>
+        <span>Favorite Players</span>
+      </a>
+    </div>
 
   </nav>
 </aside>
+
+<!-- Mobile Toggle Button -->
+<button id="sidebar-toggle" class="fixed top-4 left-4 z-50 md:hidden p-2 bg-gray-900 text-white rounded shadow-lg">
+  <i class="fas fa-bars"></i>
+</button>

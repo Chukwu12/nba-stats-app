@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Favorite Players</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -20,123 +21,163 @@
   <!-- Sidebar -->
   <%- include('partials/sidebar') %>
 
-  <!-- Main Content -->
-  <main class="flex-1 ml-64 p-8">
+    <!-- toggle button for moible view -->
+    <button id="menu-btn" class="md:hidden fixed top-4 left-4 z-50 bg-gray-900 text-white p-2 rounded">
+      <i class="fa-solid fa-bars"></i>
+    </button>
 
-    <!-- Page Title -->
-    <h1 class="text-3xl font-bold mb-8 text-blue-700 flex items-center gap-2">
-      <i class="fa-solid fa-star text-yellow-400"></i>
-      Favorite Players
-    </h1>
 
-    <!-- Search Form -->
-    <section class="bg-white p-6 rounded-lg shadow mb-10">
-      <form action="/favorite-player/searchPlayer" method="POST" class="flex gap-3">
-        <input 
-          type="text" 
-          name="playerName" 
-          placeholder="Search NBA Player..." 
-          class="p-3 border border-gray-300 rounded flex-1 focus:ring-2 focus:ring-blue-400 outline-none"
-          required
-        >
-        <button 
-          type="submit" 
-          class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition"
-        >
-          Search
-        </button>
-      </form>
+    <!-- Main Content -->
+    <main class="flex-1 p-4 md:p-8 md:ml-64">
 
-      <% if (error) { %>
-        <p class="text-red-500 mt-3"><%= error %></p>
-      <% } %>
-    </section>
 
-    <!-- Player Search Result -->
-    <% if (player) { %>
-      <section class="bg-white p-6 rounded-lg shadow mb-10 animate-fadeIn">
-        <h2 class="text-2xl font-bold mb-3"><%= player.first_name %> <%= player.last_name %></h2>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-gray-700">
-          <p><strong>Team:</strong> <%= player.team.full_name %></p>
-          <p><strong>Position:</strong> <%= player.position || 'N/A' %></p>
-          <p><strong>Height:</strong> <%= player.height_feet || 'N/A' %>' <%= player.height_inches || '' %>"</p>
-          <p><strong>Weight:</strong> <%= player.weight_pounds || 'N/A' %> lbs</p>
-          <p><strong>Conference:</strong> <%= player.team.conference %></p>
-          <p><strong>Division:</strong> <%= player.team.division %></p>
-        </div>
+      <!-- Page Title -->
+      <h1 class="text-3xl font-bold mb-8 text-blue-700 flex items-center gap-2">
+        <i class="fa-solid fa-star text-yellow-400"></i>
+        Favorite Players
+      </h1>
 
-        <!-- Favorite Button -->
-        <% const isFav = favorites && favorites.some(f => f.playerId === player.id.toString()); %>
-        <form 
-          action="<%= isFav ? '/favorite-player/removeFavorite' : '/favorite-player/addFavorite' %>" 
-          method="POST" 
-          class="mt-6"
-        >
-          <!-- Hidden Fields -->
-          <input type="hidden" name="playerId" value="<%= player.id %>">
-          <input type="hidden" name="firstName" value="<%= player.first_name %>">
-          <input type="hidden" name="lastName" value="<%= player.last_name %>">
-          <input type="hidden" name="team" value="<%= player.team.full_name %>">
-          <input type="hidden" name="position" value="<%= player.position %>">
-          <input type="hidden" name="heightFeet" value="<%= player.height_feet %>">
-          <input type="hidden" name="heightInches" value="<%= player.height_inches %>">
-          <input type="hidden" name="weightPounds" value="<%= player.weight_pounds %>">
-
-          <button 
-            type="submit" 
-            class="<%= isFav 
-              ? 'bg-red-500 hover:bg-red-600 text-white' 
-              : 'bg-yellow-400 hover:bg-yellow-500 text-black' 
-            %> px-6 py-2 rounded transition"
-          >
-            <%= isFav ? 'Remove from Favorites ⭐' : 'Add to Favorites ⭐' %>
+      <!-- Search Form -->
+      <section class="bg-white p-6 rounded-lg shadow mb-10">
+        <form action="/favorite-player/searchPlayer" method="POST" class="flex gap-3">
+          <input type="text" name="playerName" placeholder="Search NBA Player..."
+            class="p-3 border border-gray-300 rounded flex-1 focus:ring-2 focus:ring-blue-400 outline-none" required>
+          <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
+            Search
           </button>
         </form>
+
+        <% if (error) { %>
+          <p class="text-red-500 mt-3">
+            <%= error %>
+          </p>
+          <% } %>
       </section>
-    <% } %>
 
-    <!-- Favorites List -->
-    <section>
-      <h3 class="text-2xl font-semibold mb-6 text-gray-800 text-center">Your Favorite Players</h3>
+      <!-- Player Search Result -->
+      <% if (player) { %>
+        <section class="bg-white p-6 rounded-lg shadow mb-10 animate-fadeIn">
+          <h2 class="text-2xl font-bold mb-3">
+            <%= player.first_name %>
+              <%= player.last_name %>
+          </h2>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-gray-700">
+            <p><strong>Team:</strong>
+              <%= player.team.full_name %>
+            </p>
+            <p><strong>Position:</strong>
+              <%= player.position || 'N/A' %>
+            </p>
+            <p><strong>Height:</strong>
+              <%= player.height_feet || 'N/A' %>' <%= player.height_inches || '' %>"
+            </p>
+            <p><strong>Weight:</strong>
+              <%= player.weight_pounds || 'N/A' %> lbs
+            </p>
+            <p><strong>Conference:</strong>
+              <%= player.team.conference %>
+            </p>
+            <p><strong>Division:</strong>
+              <%= player.team.division %>
+            </p>
+          </div>
 
-      <% if (!favorites || favorites.length === 0) { %>
-        <p class="text-center text-gray-500">You haven’t added any favorite players yet.</p>
-      <% } else { %>
-        <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
-          <% favorites.forEach(fav => { %>
-            <a href="/favorite-player/<%= fav.playerId %>" class="w-full">
-              <div class="group bg-white rounded-2xl shadow-md p-6 cursor-pointer hover:scale-105 transition-transform flex flex-col items-center">
-                <img src="/img/default.jpeg" alt="<%= fav.firstName %> <%= fav.lastName %>" 
-                     class="rounded-full w-28 h-28 shadow-md mb-4">
-                <h3 class="text-xl font-semibold text-center"><%= fav.firstName %> <%= fav.lastName %></h3>
-                <p class="text-gray-500 text-sm text-center mb-4"><%= fav.team %></p>
-              </div>
-            </a>
-            <form action="/favorite-player/removeFavorite" method="POST" class="w-full mt-2">
-              <input type="hidden" name="playerId" value="<%= fav.playerId %>">
-              <button 
-                type="submit" 
-                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition w-full"
-              >
-                Remove
+          <!-- Favorite Button -->
+          <% const isFav=favorites && favorites.some(f=> f.playerId === player.id.toString()); %>
+            <form action="<%= isFav ? '/favorite-player/removeFavorite' : '/favorite-player/addFavorite' %>"
+              method="POST" class="mt-6">
+              <!-- Hidden Fields -->
+              <input type="hidden" name="playerId" value="<%= player.id %>">
+              <input type="hidden" name="firstName" value="<%= player.first_name %>">
+              <input type="hidden" name="lastName" value="<%= player.last_name %>">
+              <input type="hidden" name="team" value="<%= player.team.full_name %>">
+              <input type="hidden" name="position" value="<%= player.position %>">
+              <input type="hidden" name="heightFeet" value="<%= player.height_feet %>">
+              <input type="hidden" name="heightInches" value="<%= player.height_inches %>">
+              <input type="hidden" name="weightPounds" value="<%= player.weight_pounds %>">
+
+              <button type="submit" class="<%= isFav 
+              ? 'bg-red-500 hover:bg-red-600 text-white' 
+              : 'bg-yellow-400 hover:bg-yellow-500 text-black' 
+            %> px-6 py-2 rounded transition">
+                <%= isFav ? 'Remove from Favorites ⭐' : 'Add to Favorites ⭐' %>
               </button>
             </form>
-          <% }) %>
-        </div>
-      <% } %>
-    </section>
-  </main>
+        </section>
+        <% } %>
 
-  <script>
-    // Fade-in animation for search results
-    document.addEventListener("DOMContentLoaded", () => {
-      const fadeEls = document.querySelectorAll('.animate-fadeIn');
-      fadeEls.forEach(el => {
-        el.style.opacity = 0;
-        el.style.transition = 'opacity 0.5s ease';
-        setTimeout(() => { el.style.opacity = 1; }, 100);
+          <!-- Favorites List -->
+          <section>
+            <h3 class="text-2xl font-semibold mb-6 text-gray-800 text-center">Your Favorite Players</h3>
+
+            <% if (!favorites || favorites.length===0) { %>
+              <p class="text-center text-gray-500">You haven’t added any favorite players yet.</p>
+              <% } else { %>
+                <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
+                  <% favorites.forEach(fav=> { %>
+                    <a href="/favorite-player/<%= fav.playerId %>" class="w-full">
+                      <div
+                        class="group bg-white rounded-2xl shadow-md p-6 cursor-pointer hover:scale-105 transition-transform flex flex-col items-center">
+                        <img src="/img/default.jpeg" alt="<%= fav.firstName %> <%= fav.lastName %>"
+                          class="rounded-full w-28 h-28 shadow-md mb-4">
+                        <h3 class="text-xl font-semibold text-center">
+                          <%= fav.firstName %>
+                            <%= fav.lastName %>
+                        </h3>
+                        <p class="text-gray-500 text-sm text-center mb-4">
+                          <%= fav.team %>
+                        </p>
+                      </div>
+                    </a>
+                    <form action="/favorite-player/removeFavorite" method="POST" class="w-full mt-2">
+                      <input type="hidden" name="playerId" value="<%= fav.playerId %>">
+                      <button type="submit"
+                        class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition w-full">
+                        Remove
+                      </button>
+                    </form>
+                    <% }) %>
+                </div>
+                <% } %>
+          </section>
+    </main>
+
+  
+
+    <script>
+      // Fade-in animation for search results
+      document.addEventListener("DOMContentLoaded", () => {
+        const fadeEls = document.querySelectorAll('.animate-fadeIn');
+        fadeEls.forEach(el => {
+          el.style.opacity = 0;
+          el.style.transition = 'opacity 0.5s ease';
+          setTimeout(() => { el.style.opacity = 1; }, 100);
+        });
       });
-    });
-  </script>
+    </script>
+
+    <script>
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const toggleBtn = document.getElementById('sidebar-toggle');
+  const closeBtn = document.getElementById('sidebar-close');
+
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('-translate-x-full');
+    overlay.classList.toggle('hidden');
+  });
+
+  overlay.addEventListener('click', () => {
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+  });
+</script>
+
 </body>
+
 </html>
