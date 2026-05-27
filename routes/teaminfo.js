@@ -16,7 +16,16 @@ router.get("/team-tracker", (req, res) => {
 
 // POST /findTeams
 router.post("/findTeams", async (req, res) => {
-  const teamName = req.body.teamName.toLowerCase();
+  const teamName = (req.body.teamName || "").trim().toLowerCase();
+
+  if (!teamName) {
+    return res.render("teamTracker", {
+      info: null,
+      infoName: null,
+      logo: null,
+      error: "Please enter a team name or abbreviation."
+    });
+  }
 
   try {
     // 1️⃣ Fetch all NBA teams from balldontlie
@@ -46,8 +55,9 @@ router.post("/findTeams", async (req, res) => {
         ...(localStats || {})
       };
 
-      // 3️⃣ Try fetching the logo from RapidAPI
-      let logoUrl = null;
+      // 3️⃣ Build a reliable logo URL by team abbreviation.
+      // ESPN's team logo CDN is stable and avoids mismatched team logos.
+      let logoUrl = `https://a.espncdn.com/i/teamlogos/nba/500/${foundTeam.abbreviation.toLowerCase()}.png`;
       try {
          const logoResponse = await axios.get("https://nba-api-free-data.p.rapidapi.com/nba-team-logo", {
     params: { teamid: foundTeam.id }, // dynamic ID from Balldontlie
@@ -58,13 +68,21 @@ router.post("/findTeams", async (req, res) => {
   });
 
         if (logoResponse.data?.status === "success" && logoResponse.data.response?.logos?.length > 0) {
-    // Use the primary logo on white background (best quality)
-    const primaryLogo = logoResponse.data.response.logos.find(
-      logo => logo.rel.includes("primary_logo_on_white_color")
-    );
+          const primaryLogo = logoResponse.data.response.logos.find(
+            logo => logo.rel.includes("primary_logo_on_white_color")
+          );
 
-    logoUrl = primaryLogo?.href || logoResponse.data.response.logos[0].href;
-  }
+          const candidateUrl = primaryLogo?.href || logoResponse.data.response.logos[0].href;
+
+          // Only override the stable fallback when the URL clearly matches the team.
+          if (typeof candidateUrl === "string") {
+            const matchKey = foundTeam.abbreviation.toLowerCase();
+            const teamSlug = foundTeam.full_name.toLowerCase().replace(/\s+/g, "-");
+            if (candidateUrl.toLowerCase().includes(matchKey) || candidateUrl.toLowerCase().includes(teamSlug)) {
+              logoUrl = candidateUrl;
+            }
+          }
+        }
 } catch (err) {
   console.warn("⚠️ Could not fetch logo from RapidAPI:", err.message);
 }

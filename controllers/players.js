@@ -98,18 +98,29 @@ exports.renderPlayerDetails = async (req, res) => {
     });
     const player = playerRes.data;
 
-    // 2️⃣ Fetch season averages
-    const statsRes = await axios.get(`https://api.balldontlie.io/v1/season_averages`, {
-      params: { 'player_ids[]': playerId },
-      headers: { Authorization: `${NBA_API_KEY}` }
-    });
-    const statData = statsRes.data.data[0] || {};
-
     const stats = {
-      ppg: statData.pts || 'N/A',
-      apg: statData.ast || 'N/A',
-      rpg: statData.reb || 'N/A'
+      ppg: 'N/A',
+      apg: 'N/A',
+      rpg: 'N/A'
     };
+
+    // 2️⃣ Fetch season averages when available for the API plan.
+    try {
+      const statsRes = await axios.get(`https://api.balldontlie.io/v1/season_averages`, {
+        params: { 'player_ids[]': playerId },
+        headers: { Authorization: `${NBA_API_KEY}` }
+      });
+      const statData = statsRes.data.data?.[0] || {};
+
+      stats.ppg = statData.pts || 'N/A';
+      stats.apg = statData.ast || 'N/A';
+      stats.rpg = statData.reb || 'N/A';
+    } catch (statsErr) {
+      console.warn(
+        `Season averages unavailable for player ${playerId}:`,
+        statsErr.response?.status || statsErr.message
+      );
+    }
 
     // 3️⃣ Fetch player image from RapidAPI (optional)
     let image = '/img/default.jpeg';

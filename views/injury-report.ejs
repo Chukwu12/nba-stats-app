@@ -17,7 +17,8 @@
 
 
 <body class="injury-shell text-slate-100">
-  <%- include('partials/sidebar') %>
+  <section class="flex min-h-screen">
+    <%- include('partials/sidebar') %>
 
   <% 
     const injuryCount = injuries ? injuries.length : 0;
@@ -33,7 +34,7 @@
   <i class="fa-solid fa-bars"></i>
 </button>
 
-  <main class="page-offset px-4 pb-12 pt-20 md:px-8 md:pt-10">
+  <main class="page-offset flex-1 px-4 pb-12 pt-20 md:px-8 md:pt-10">
     <div class="mx-auto max-w-7xl space-y-8">
       <section class="report-hero overflow-hidden rounded-[2rem] border border-white/10 bg-white/8 p-6 shadow-2xl shadow-red-950/20 backdrop-blur md:p-10">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(248,113,113,0.2),_transparent_25%),radial-gradient(circle_at_bottom_right,_rgba(251,191,36,0.15),_transparent_24%)]"></div>
@@ -202,6 +203,7 @@
       <% } %>
     </div>
   </main>
+  </section>
 
   <script src="/js/main.js"></script>
 <script src="/js/injuries.js"></script>

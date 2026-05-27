@@ -509,7 +509,8 @@ width: 50px;
 }
 
 .player-page-main {
-  margin-left: 18rem;
+  margin-left: 0;
+  min-width: 0;
 }
 
 .players-hero,
@@ -535,7 +536,8 @@ width: 50px;
 }
 
 .injury-shell .page-offset {
-  margin-left: 18rem;
+  margin-left: 0;
+  min-width: 0;
 }
 
 .injury-shell .summary-card,
@@ -577,6 +579,36 @@ width: 50px;
     linear-gradient(180deg, #020617 0%, #0f172a 45%, #111827 100%);
 }
 
+.home-shell {
+  font-family: 'Space Grotesk', sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(56, 189, 248, 0.16), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.14), transparent 24%),
+    linear-gradient(180deg, #020617 0%, #0f172a 45%, #111827 100%);
+}
+
+.home-shell h1,
+.home-shell h2,
+.home-shell h3,
+.home-shell p {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  margin: 0;
+}
+
+.home-page-main {
+  margin-left: 0;
+  min-width: 0;
+}
+
+.home-shell .home-hero,
+.home-shell .home-card,
+.home-shell .home-media-card {
+  position: relative;
+}
+
 .team-shell h1,
 .team-shell h2,
 .team-shell h3,
@@ -592,9 +624,14 @@ width: 50px;
   margin: 0;
 }
 
-.team-shell .page-offset,
+.team-shell .page-offset {
+  margin-left: 0;
+  min-width: 0;
+}
+
 .favorite-shell .page-offset {
-  margin-left: 18rem;
+  margin-left: 0;
+  min-width: 0;
 }
 
 .team-shell .tracker-hero,
@@ -640,7 +677,8 @@ width: 50px;
 }
 
 .favorite-detail-shell .page-offset {
-  margin-left: 18rem;
+  margin-left: 0;
+  min-width: 0;
 }
 
 @media (max-width: 767px) {
