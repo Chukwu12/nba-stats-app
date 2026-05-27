@@ -55,7 +55,7 @@ h2 {
 
 
 main {
-  margin-left: 16rem;
+  margin-left: 18rem;
   /* match sidebar width */
   padding: 2rem;
 }
@@ -487,4 +487,168 @@ body#team-tracker {
 .favoirite-gif{
 height:50px;
 width: 50px;
+}
+
+.players-shell {
+  font-family: 'Space Grotesk', sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.12), transparent 24%),
+    linear-gradient(180deg, #020617 0%, #0f172a 42%, #111827 100%);
+}
+
+.players-shell p,
+.players-shell h1,
+.players-shell h2,
+.players-shell h3 {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  margin: 0;
+}
+
+.player-page-main {
+  margin-left: 18rem;
+}
+
+.players-hero,
+.player-details-hero,
+.player-card {
+  position: relative;
+}
+
+.player-avatar-ring {
+  box-shadow: inset 0 0 0 1px rgba(125, 211, 252, 0.12), 0 16px 40px rgba(8, 47, 73, 0.35);
+}
+
+.player-detail-image {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.15));
+}
+
+.injury-shell {
+  font-family: 'Space Grotesk', sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(248, 113, 113, 0.16), transparent 26%),
+    radial-gradient(circle at right, rgba(251, 191, 36, 0.12), transparent 24%),
+    linear-gradient(180deg, #020617 0%, #111827 45%, #1f2937 100%);
+}
+
+.injury-shell .page-offset {
+  margin-left: 18rem;
+}
+
+.injury-shell .summary-card,
+.injury-shell .injury-card-modern,
+.injury-shell .search-card,
+.injury-shell .report-hero {
+  position: relative;
+}
+
+.injury-shell .status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.injury-shell .status-badge-active {
+  background: rgba(239, 68, 68, 0.16);
+  color: #fecaca;
+  border: 1px solid rgba(248, 113, 113, 0.28);
+}
+
+.injury-shell .status-badge-clear {
+  background: rgba(16, 185, 129, 0.14);
+  color: #bbf7d0;
+  border: 1px solid rgba(52, 211, 153, 0.25);
+}
+
+.team-shell {
+  font-family: 'Space Grotesk', sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(56, 189, 248, 0.14), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.16), transparent 24%),
+    linear-gradient(180deg, #020617 0%, #0f172a 45%, #111827 100%);
+}
+
+.team-shell h1,
+.team-shell h2,
+.team-shell h3,
+.team-shell p,
+.favorite-shell h1,
+.favorite-shell h2,
+.favorite-shell h3,
+.favorite-shell p {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  margin: 0;
+}
+
+.team-shell .page-offset,
+.favorite-shell .page-offset {
+  margin-left: 18rem;
+}
+
+.team-shell .tracker-hero,
+.team-shell .team-panel,
+.team-shell .team-stat-card,
+.favorite-shell .favorites-hero,
+.favorite-shell .favorite-search-result,
+.favorite-shell .favorite-card {
+  position: relative;
+}
+
+.team-shell .metric-tile {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(2, 6, 23, 0.48);
+  backdrop-filter: blur(16px);
+}
+
+.favorite-shell {
+  font-family: 'Space Grotesk', sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(250, 204, 21, 0.16), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.12), transparent 24%),
+    linear-gradient(180deg, #020617 0%, #0f172a 45%, #111827 100%);
+}
+
+.favorite-detail-shell {
+  font-family: 'Space Grotesk', sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(250, 204, 21, 0.14), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.12), transparent 24%),
+    linear-gradient(180deg, #020617 0%, #0f172a 45%, #111827 100%);
+}
+
+.favorite-detail-shell h1,
+.favorite-detail-shell h2,
+.favorite-detail-shell h3,
+.favorite-detail-shell p {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  margin: 0;
+}
+
+.favorite-detail-shell .page-offset {
+  margin-left: 18rem;
+}
+
+@media (max-width: 767px) {
+  .injury-shell .page-offset,
+  .team-shell .page-offset,
+  .favorite-shell .page-offset,
+  .favorite-detail-shell .page-offset,
+  .player-page-main {
+    margin-left: 0;
+  }
 }

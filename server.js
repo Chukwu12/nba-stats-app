@@ -7,6 +7,15 @@ const path = require('path');
 const mongoose = require('mongoose');
 const connectDB = require('./config/database');
 
+const getActivePage = (requestPath) => {
+  if (requestPath === '/') return 'home';
+  if (requestPath.startsWith('/team-tracker') || requestPath.startsWith('/findTeams')) return 'team-tracker';
+  if (requestPath.startsWith('/players')) return 'players';
+  if (requestPath.startsWith('/injury-report')) return 'injury-report';
+  if (requestPath.startsWith('/favorite-player')) return 'favorite-player';
+  return '';
+};
+
 
 // Connect to MongoDB
 connectDB();
@@ -43,6 +52,10 @@ app.set('view engine', 'ejs')
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use((req, res, next) => {
+  res.locals.activePage = getActivePage(req.path);
+  next();
+})
 
 
 // Routes usage

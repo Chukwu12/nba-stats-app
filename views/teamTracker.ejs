@@ -6,139 +6,189 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NBA Team Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body id="team-tracker" class="bg-gray-100 min-h-screen">
+<body id="team-tracker" class="team-shell min-h-screen text-slate-100">
+  <% 
+    const recordParts = info && info['best Record'] ? info['best Record'].split('-') : [];
+    const bestWins = recordParts[0] ? Number(recordParts[0]) : 0;
+    const bestLosses = recordParts[1] ? Number(recordParts[1]) : 0;
+    const chartPoints = info ? [
+      info.championships || 0,
+      bestWins,
+      bestLosses
+    ] : [];
+  %>
   <div class="flex">
     <%- include('partials/sidebar') %>
 
-    <button
-  id="menu-btn"
-  class="md:hidden fixed top-4 left-4 z-50 bg-gray-900 text-white p-2 rounded"
->
-  <i class="fa-solid fa-bars"></i>
-</button>
+    <button id="menu-btn" class="md:hidden fixed top-4 left-4 z-50 rounded-2xl border border-white/10 bg-slate-950/90 p-3 text-white shadow-xl shadow-slate-950/30 backdrop-blur">
+      <i class="fa-solid fa-bars"></i>
+    </button>
 
+    <main class="page-offset flex-1 px-4 pb-12 pt-20 md:px-8 md:pt-10">
+      <div class="mx-auto flex w-full max-w-7xl flex-col gap-8">
+        <section class="tracker-hero overflow-hidden rounded-[2rem] border border-white/10 bg-white/8 p-6 shadow-2xl shadow-cyan-950/20 backdrop-blur md:p-10">
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.2),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(249,115,22,0.16),_transparent_25%)]"></div>
+          <div class="relative grid gap-8 xl:grid-cols-[1.2fr_0.9fr] xl:items-end">
+            <div class="space-y-5">
+              <span class="inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-cyan-200">
+                <i class="fa-solid fa-shield-halved"></i>
+                Franchise Lookup
+              </span>
 
-    <main class="ml-64 flex-1 p-8">
+              <div class="space-y-3">
+                <h1 class="text-4xl font-bold tracking-tight text-white md:text-6xl">Search a franchise and surface the essentials fast.</h1>
+                <p class="max-w-2xl text-base leading-7 text-slate-300 md:text-lg">Pull up team identity, league placement, historical markers, and a quick chart snapshot from a cleaner tracker interface.</p>
+              </div>
 
-      <!-- Search Section -->
-      <section class="min-h-screen bg-cover bg-center p-8" style="background-image: url('/img/basketball-img.jpg')">
-        <div class="bg-white/30 backdrop-blur-lg max-w-3xl mx-auto p-10 rounded-2xl shadow-2xl text-center">
-          <h1 class="text-4xl font-extrabold text-blue-900 mb-6 tracking-tight">
-            NBA Team Tracker <i class="fa-solid fa-basketball fa-bounce text-orange-500"></i>
-          </h1>
+              <form action="/findTeams" method="POST" class="flex flex-col gap-3 rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-3 sm:flex-row sm:items-center sm:p-4">
+                <label for="team-search" class="sr-only">Enter team name</label>
+                <div class="flex flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                  <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+                  <input id="team-search" type="text" name="teamName" placeholder="Search by team name or abbreviation" class="w-full border-0 bg-transparent p-0 text-base text-white placeholder:text-slate-500 focus:outline-none focus:ring-0" required>
+                </div>
+                <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-cyan-400 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300">
+                  <span>Search</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </form>
+            </div>
 
-          <!-- Search Form -->
-          <form action="/findTeams" method="POST" class="flex flex-col md:flex-row gap-4 justify-center mb-6">
-            <input type="text" name="teamName" placeholder="Enter Team Name..." class="flex-1 p-3 rounded-md border focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800" required>
-            <button type="submit" class="bg-blue-600 text-white px-5 py-3 rounded-md hover:bg-blue-700 transition font-semibold">
-              Search
-            </button>
-          </form>
+            <div class="grid gap-4 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+              <article class="metric-tile rounded-[1.5rem] p-5">
+                <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Mode</p>
+                <p class="mt-3 text-2xl font-bold text-white"><%= info ? 'Team loaded' : 'Search ready' %></p>
+                <p class="mt-2 text-sm text-slate-400"><%= info ? `Displaying ${info.full_name}.` : 'Enter a franchise to populate the tracker.' %></p>
+              </article>
+              <article class="metric-tile rounded-[1.5rem] p-5">
+                <p class="text-xs uppercase tracking-[0.3em] text-slate-500">League</p>
+                <p class="mt-3 text-2xl font-bold text-white"><%= info ? info.conference : 'Eastern + Western' %></p>
+                <p class="mt-2 text-sm text-slate-400"><%= info ? `${info.division} Division` : 'Search any active NBA franchise.' %></p>
+              </article>
+              <article class="metric-tile rounded-[1.5rem] p-5">
+                <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Snapshot</p>
+                <p class="mt-3 text-2xl font-bold text-white"><%= info && info['best Record'] ? info['best Record'] : 'Historical record' %></p>
+                <p class="mt-2 text-sm text-slate-400"><%= info && info.championships !== undefined ? `${info.championships} championships tracked locally.` : 'Search to see franchise milestones.' %></p>
+              </article>
+            </div>
+          </div>
+        </section>
 
-          <!-- Error Message -->
-          <% if (error) { %>
-          <div class="bg-red-100 border border-red-300 text-red-700 p-4 rounded mb-4 shadow">
+        <% if (error) { %>
+          <div class="rounded-3xl border border-red-400/30 bg-red-500/10 px-5 py-4 text-red-100 shadow-lg shadow-red-950/20">
             <%= error %>
           </div>
-          <% } %>
+        <% } %>
 
-          <!-- Team Info Section -->
-          <% if (info) { %>
-          <div class="team-card">
+        <% if (info) { %>
+          <section class="grid gap-8 xl:grid-cols-[0.95fr_1.05fr]">
+            <div class="team-panel overflow-hidden rounded-[2rem] border border-white/10 bg-white/8 p-6 shadow-2xl shadow-slate-950/20 backdrop-blur md:p-8">
+              <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.12),_transparent_26%),radial-gradient(circle_at_bottom_left,_rgba(249,115,22,0.12),_transparent_24%)]"></div>
+              <div class="relative flex h-full flex-col gap-8">
+                <div class="flex flex-col gap-5 sm:flex-row sm:items-center">
+                  <div class="flex h-28 w-28 items-center justify-center rounded-[2rem] border border-white/10 bg-slate-950/60 p-4 shadow-xl shadow-slate-950/20">
+                    <img src="<%= logo || `/img/teams/${info.full_name.toLowerCase().replace(/ /g, '-')}.png` %>" alt="<%= info.full_name %> logo" class="h-full w-full object-contain drop-shadow-md" onerror="this.src='/img/default-team.png'">
+                  </div>
 
-            <!-- Header with Logo -->
-            <div class="flex items-center justify-center gap-4 mb-6">
-              <img src="<%= logo || `/img/teams/${info.full_name.toLowerCase().replace(/ /g, '-')}.png` %>" alt="<%= info.full_name %> logo" class="team-logo w-24 h-24 object-contain drop-shadow-md" onerror="this.src='/img/default-team.png'">
+                  <div class="space-y-2">
+                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-200">Franchise Profile</p>
+                    <h2 class="text-4xl font-bold tracking-tight text-white"><%= info.full_name %></h2>
+                    <p class="text-base text-slate-300"><i class="fa-solid fa-location-dot mr-2 text-cyan-300"></i><%= info.city %></p>
+                  </div>
+                </div>
 
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <article class="team-stat-card rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Abbreviation</p>
+                    <p class="mt-3 text-3xl font-bold text-white"><%= info.abbreviation %></p>
+                  </article>
+                  <article class="team-stat-card rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Conference</p>
+                    <p class="mt-3 text-3xl font-bold text-white"><%= info.conference %></p>
+                  </article>
+                  <article class="team-stat-card rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Division</p>
+                    <p class="mt-3 text-2xl font-bold text-white"><%= info.division %></p>
+                  </article>
+                  <article class="team-stat-card rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Championships</p>
+                    <p class="mt-3 text-3xl font-bold text-white"><%= info.championships !== undefined ? info.championships : 'N/A' %></p>
+                  </article>
+                </div>
 
-              <div>
-                <h2 class="text-3xl font-bold text-blue-800"><%= info.full_name %></h2>
-                <p class="text-gray-600"><i class="fa-solid fa-location-dot text-blue-500 mr-2"></i><%= info.city %></p>
+                <div class="grid gap-4">
+                  <article class="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Best Record</p>
+                    <p class="mt-3 text-3xl font-bold text-white"><%= info['best Record'] || 'N/A' %></p>
+                  </article>
+                  <article class="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Most 3s</p>
+                    <p class="mt-3 text-2xl font-bold text-white"><%= info['Most 3s'] || 'N/A' %></p>
+                  </article>
+                </div>
+
+                <a href="/team-tracker" class="inline-flex items-center gap-2 text-sm font-medium text-cyan-200 transition hover:text-white">
+                  <i class="fa-solid fa-arrow-left"></i>
+                  Search another team
+                </a>
               </div>
             </div>
 
-            <!-- Core Info -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-gray-800 mb-6">
-              <p><i class="fa-solid fa-rectangle-list text-blue-500 mr-2"></i><strong>Abbreviation:</strong> <%= info.abbreviation %></p>
-              <p><i class="fa-solid fa-people-group text-blue-500 mr-2"></i><strong>Conference:</strong> <%= info.conference %></p>
-              <p><i class="fa-solid fa-layer-group text-blue-500 mr-2"></i><strong>Division:</strong> <%= info.division %></p>
-              <% if (info.championships !== undefined) { %>
-              <p>🏆<strong>Championships:</strong> <%= info.championships %></p>
-              <p><i class="fa-solid fa-basketball" style="color: #3b82f6;"></i><strong>Most 3s:</strong> <%= info["Most 3s"] %></p>
-              <p><i class="fa-solid fa-chart-simple" style="color: #3b82f6;"></i><strong>Best Record:</strong> <%= info["best Record"] %></p>
-              <% } %>
+            <div class="space-y-6">
+              <section class="rounded-[2rem] border border-white/10 bg-white/8 p-6 shadow-2xl shadow-slate-950/20 backdrop-blur md:p-8">
+                <div class="flex items-center justify-between gap-4">
+                  <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-500">Historical Snapshot</p>
+                    <h3 class="mt-2 text-3xl font-bold text-white">Performance overview</h3>
+                  </div>
+                  <span class="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-cyan-200">Chart</span>
+                </div>
+
+                <div class="mt-6 rounded-[1.5rem] border border-white/10 bg-slate-950/60 p-5">
+                  <canvas id="teamChart" data-chart='<%= JSON.stringify(chartPoints) %>' data-label="<%= info.full_name %> historical snapshot" height="120"></canvas>
+                </div>
+              </section>
+
+              <section class="grid gap-4 sm:grid-cols-3">
+                <article class="rounded-[1.5rem] border border-cyan-400/20 bg-cyan-400/10 p-5 shadow-xl shadow-cyan-950/10">
+                  <p class="text-xs uppercase tracking-[0.3em] text-cyan-200">Titles</p>
+                  <p class="mt-3 text-4xl font-bold text-white"><%= info.championships !== undefined ? info.championships : 'N/A' %></p>
+                </article>
+                <article class="rounded-[1.5rem] border border-emerald-400/20 bg-emerald-400/10 p-5 shadow-xl shadow-emerald-950/10">
+                  <p class="text-xs uppercase tracking-[0.3em] text-emerald-200">Best Wins</p>
+                  <p class="mt-3 text-4xl font-bold text-white"><%= bestWins || 'N/A' %></p>
+                </article>
+                <article class="rounded-[1.5rem] border border-amber-400/20 bg-amber-400/10 p-5 shadow-xl shadow-amber-950/10">
+                  <p class="text-xs uppercase tracking-[0.3em] text-amber-200">Best Losses</p>
+                  <p class="mt-3 text-4xl font-bold text-white"><%= bestLosses || 'N/A' %></p>
+                </article>
+              </section>
             </div>
-
-
-
-
-            <!-- Chart Section -->
-            <div class="chart-container bg-white p-4 rounded-lg shadow-md">
-              <h3 class="text-xl font-semibold text-blue-700 mb-2">Team Performance Overview</h3>
-              <canvas id="teamChart" height="120"></canvas>
+          </section>
+        <% } else { %>
+          <section class="rounded-[2rem] border border-dashed border-white/15 bg-white/5 px-6 py-16 text-center shadow-xl shadow-slate-950/30">
+            <div class="mx-auto flex max-w-xl flex-col items-center gap-4">
+              <span class="flex h-16 w-16 items-center justify-center rounded-full bg-cyan-400/10 text-cyan-200">
+                <i class="fa-solid fa-shield-halved text-2xl"></i>
+              </span>
+              <h2 class="text-3xl font-bold text-white">Search for a franchise</h2>
+              <p class="text-base leading-7 text-slate-400">Start with a team name or abbreviation to load franchise details, historical milestones, and a chart snapshot.</p>
             </div>
-
-            <a href="/team-tracker" class="mt-6 inline-block text-blue-600 hover:underline text-sm">
-              ← Search another team
-            </a>
-          </div>
-          <% } %>
-        </div>
-      </section>
+          </section>
+        <% } %>
+      </div>
     </main>
   </div>
-
-  <% if (info) { %>
-  <script>
-    // Placeholder data for the chart — later can be replaced with real stats
-    const ctx = document.getElementById('teamChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Wins', 'Losses', '3PT%', 'FG%', 'Rebounds'],
-        datasets: [{
-          label: '<%= info.full_name %> Stats Overview',
-          data: [55, 27, 38, 47, 44], // temporary mock values
-          backgroundColor: ['#2563eb', '#dc2626', '#f97316', '#16a34a', '#9333ea'],
-          borderRadius: 8
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: false
-          },
-          title: {
-            display: true,
-            text: 'Season Snapshot',
-            color: '#1e3a8a'
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              color: '#1e293b'
-            }
-          },
-          x: {
-            ticks: {
-              color: '#1e293b'
-            }
-          }
-        }
-      }
-    });
-  </script>
-  <% } %>
   <script src="/js/main.js"></script>
-  <script src='js/teams.js'></script>
+  <script src="/js/teams.js"></script>
 </body>
 
 </html>

@@ -5,15 +5,26 @@
   <meta charset="UTF-8">
   <title>NBA Injury Report</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 
 
-<body class="bg-gray-100 text-gray-900 font-sans">
+<body class="injury-shell text-slate-100">
   <%- include('partials/sidebar') %>
+
+  <% 
+    const injuryCount = injuries ? injuries.length : 0;
+    const playerCount = players ? players.length : 0;
+    const hasSearch = Boolean(search);
+    const searchCount = searchResults ? searchResults.length : 0;
+  %>
 
   <button
   id="menu-btn"
@@ -22,79 +33,177 @@
   <i class="fa-solid fa-bars"></i>
 </button>
 
+  <main class="page-offset px-4 pb-12 pt-20 md:px-8 md:pt-10">
+    <div class="mx-auto max-w-7xl space-y-8">
+      <section class="report-hero overflow-hidden rounded-[2rem] border border-white/10 bg-white/8 p-6 shadow-2xl shadow-red-950/20 backdrop-blur md:p-10">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(248,113,113,0.2),_transparent_25%),radial-gradient(circle_at_bottom_right,_rgba(251,191,36,0.15),_transparent_24%)]"></div>
+        <div class="relative grid gap-8 xl:grid-cols-[1.2fr_0.9fr] xl:items-end">
+          <div class="space-y-5">
+            <span class="inline-flex items-center gap-2 rounded-full border border-red-400/25 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-red-100">
+              <i class="fa-solid fa-heart-pulse"></i>
+              Player Availability
+            </span>
+            <div class="space-y-3">
+              <h1 class="text-4xl font-bold tracking-tight text-white md:text-6xl">Track injuries without digging through clutter.</h1>
+              <p class="max-w-2xl text-base leading-7 text-slate-300 md:text-lg">Scan player availability, inspect injury notes, and search for NBA profiles from one cleaner, faster report page.</p>
+            </div>
 
-  <div class="max-w-7xl mx-auto p-6 ml-64">
-    <h1 class="text-3xl font-bold mb-6 text-red-600">NBA Injury Report</h1>
-
-    <!-- 🔍 Search Form -->
-    <form action="/injury-report/search" method="GET" class="mb-6">
-      <input type="text" name="query" placeholder="Search player injuries..." value="<%= search || '' %>" class="border border-gray-300 p-2 rounded w-full md:w-1/2" required />
-      <button type="submit" class="ml-2 px-4 py-2 bg-blue-600 text-white rounded">Search</button>
-    </form>
-
-    <!-- 🔥 Error Message -->
-    <% if (error) { %>
-    <div class="bg-red-100 text-red-800 border border-red-200 p-4 rounded mb-6">
-      <%= error %>
-    </div>
-    <% } %>
-
-    <!-- 🔍 Search Results -->
-    <% if (searchResults && searchResults.length > 0) { %>
-    <div class="mb-8">
-      <h2 class="text-xl font-semibold mb-4 text-gray-800">Search Results for "<%= search %>"</h2>
-      <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <% searchResults.forEach(player => { %>
-        <li class="bg-white p-4 rounded shadow flex items-center gap-4">
-          <img src="<%= '/img/default.jpeg' %>" alt="<%= player.displayName %>" class="w-20 h-20 rounded-full object-cover border" />
-          <div>
-            <h3 class="font-bold text-blue-700 text-lg"><%= player.displayName %></h3>
-            <p class="text-sm text-gray-600"><%= player.subtitle || 'No team info' %></p>
-            <% if (player.link?.web) { %>
-            <a href="<%= player.link.web %>" target="_blank" class="text-blue-500 text-sm underline">View Player Profile</a>
-            <% } %>
+            <form action="/injury-report/search" method="GET" class="flex flex-col gap-3 rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-3 sm:flex-row sm:items-center sm:p-4">
+              <label for="injury-search" class="sr-only">Search player injuries</label>
+              <div class="flex flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+                <input id="injury-search" type="text" name="query" placeholder="Search player injuries or profiles" value="<%= search || '' %>" class="w-full border-0 bg-transparent p-0 text-base text-white placeholder:text-slate-500 focus:outline-none focus:ring-0" required />
+              </div>
+              <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-red-500 px-5 py-3 font-semibold text-white transition hover:bg-red-400">
+                <span>Search</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </form>
           </div>
-        </li>
-        <% }) %>
-      </ul>
-    </div>
-    <% } else if (search) { %>
-    <p class="text-sm text-gray-600 italic">No matching players found for "<%= search %>".</p>
-    <% } %>
 
-    <!-- 🏥 Default Injury Grid -->
-    <% if (!search) { %>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <% players.forEach(player => { 
-          const injury = injuries.find(inj => inj.athlete?.displayName === `${player.first_name} ${player.last_name}`);
-        %>
-      <div class="injury-card cursor-pointer block bg-white border rounded-lg p-6 shadow hover:shadow-lg transition" data-player='<%= JSON.stringify({ 
-    first_name: player.first_name, 
-    last_name: player.last_name, 
-    team: player.team, 
-    injury: injury ? { status: injury.status, comment: injury.shortComment } : null 
-  }) %>'>
-        <div class="flex gap-4 items-center">
-          <img src="/img/default.jpeg" alt="<%= player.first_name %>" class="w-16 h-16 rounded-full object-cover border-2 border-red-500" />
-          <div>
-            <h2 class="font-bold text-lg text-blue-800"><%= player.first_name %> <%= player.last_name %></h2>
-            <p class="text-sm text-gray-600">Team: <%= player.team %></p>
-            <% if (injury) { %>
-            <p class="text-sm text-red-600 font-semibold"><%= injury.status %></p>
-            <p class="text-xs text-gray-500 italic"><%= injury.shortComment %></p>
-            <% } else { %>
-            <p class="text-xs text-green-600">No injury reported</p>
-            <% } %>
+          <div class="grid gap-4 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+            <article class="summary-card rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+              <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Tracked Players</p>
+              <p class="mt-3 text-4xl font-bold text-white"><%= playerCount %></p>
+              <p class="mt-2 text-sm text-slate-400">Current player cards loaded in the report.</p>
+            </article>
+            <article class="summary-card rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+              <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Injuries Listed</p>
+              <p class="mt-3 text-4xl font-bold text-white"><%= injuryCount %></p>
+              <p class="mt-2 text-sm text-slate-400">Records returned from the injury feed.</p>
+            </article>
+            <article class="summary-card rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+              <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Search Mode</p>
+              <p class="mt-3 text-2xl font-bold text-white"><%= hasSearch ? `${searchCount} match${searchCount === 1 ? '' : 'es'}` : 'Live board' %></p>
+              <p class="mt-2 text-sm text-slate-400"><%= hasSearch ? `Showing results for "${search}".` : 'Browse the latest visible player availability cards.' %></p>
+            </article>
           </div>
         </div>
+      </section>
+
+      <% if (error) { %>
+      <div class="rounded-3xl border border-red-400/30 bg-red-500/10 px-5 py-4 text-red-100 shadow-lg shadow-red-950/20">
+        <%= error %>
       </div>
+      <% } %>
 
-      <% }) %>
+      <% if (searchResults && searchResults.length > 0) { %>
+      <section class="space-y-5">
+        <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-400">Search Results</p>
+            <h2 class="text-3xl font-bold text-white">Matches for "<%= search %>"</h2>
+          </div>
+          <a href="/injury-report" class="inline-flex items-center gap-2 text-sm font-medium text-red-200 transition hover:text-white">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to live injury board
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <% searchResults.forEach(player => { %>
+          <article class="search-card rounded-[1.75rem] border border-white/10 bg-white/8 p-6 shadow-xl shadow-slate-950/20 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-red-400/40">
+            <div class="flex items-start gap-4">
+              <div class="flex h-20 w-20 items-center justify-center rounded-3xl bg-slate-900/80 text-2xl font-bold text-red-100 shadow-lg shadow-red-950/20">
+                <%= (player.displayName || 'NBA').split(' ').slice(0, 2).map(name => name.charAt(0)).join('') %>
+              </div>
+              <div class="space-y-2">
+                <h3 class="text-2xl font-bold text-white"><%= player.displayName %></h3>
+                <p class="text-sm leading-6 text-slate-400"><%= player.subtitle || 'No team or injury context returned.' %></p>
+                <span class="status-badge <%= player.subtitle?.includes('NBA') ? 'status-badge-active' : 'status-badge-clear' %>">
+                  <i class="fa-solid fa-link"></i>
+                  Profile match
+                </span>
+              </div>
+            </div>
+
+            <% if (player.link?.web) { %>
+            <a href="<%= player.link.web %>" target="_blank" rel="noreferrer" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-red-200 transition hover:text-white">
+              View player profile
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+            <% } %>
+          </article>
+          <% }) %>
+        </div>
+      </section>
+      <% } else if (search) { %>
+      <section class="rounded-[2rem] border border-dashed border-white/15 bg-white/5 px-6 py-16 text-center shadow-xl shadow-slate-950/30">
+        <div class="mx-auto flex max-w-xl flex-col items-center gap-4">
+          <span class="flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10 text-red-200">
+            <i class="fa-solid fa-magnifying-glass text-2xl"></i>
+          </span>
+          <h2 class="text-3xl font-bold text-white">No search matches</h2>
+          <p class="text-base leading-7 text-slate-400">No matching players were found for "<%= search %>". Try a broader player name or return to the live injury board.</p>
+        </div>
+      </section>
+      <% } %>
+
+      <% if (!search) { %>
+      <section class="space-y-5">
+        <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-400">Live Board</p>
+            <h2 class="text-3xl font-bold text-white">Current player availability snapshots</h2>
+          </div>
+          <p class="text-sm text-slate-400">Tap any card to inspect the player and injury note.</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <% players.forEach(player => { 
+              const injury = injuries.find(inj => inj.athlete?.displayName === `${player.first_name} ${player.last_name}`);
+          %>
+          <article class="injury-card injury-card-modern cursor-pointer overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/8 p-6 shadow-xl shadow-slate-950/20 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-red-400/40 hover:shadow-red-950/20" data-player='<%= JSON.stringify({ 
+            first_name: player.first_name, 
+            last_name: player.last_name, 
+            team: player.team, 
+            position: player.position,
+            injury: injury ? { status: injury.status, comment: injury.shortComment } : null 
+          }) %>'>
+            <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-400 via-orange-400 to-amber-300 opacity-80"></div>
+            <div class="relative flex h-full flex-col gap-6">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex items-center gap-4">
+                  <div class="flex h-20 w-20 items-center justify-center rounded-3xl bg-slate-900/80 text-2xl font-bold text-red-100 shadow-lg shadow-red-950/20">
+                    <%= `${player.first_name.charAt(0)}${player.last_name.charAt(0)}` %>
+                  </div>
+                  <div class="space-y-1">
+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-500"><%= player.position || 'N/A' %></p>
+                    <h3 class="text-2xl font-bold text-white"><%= player.first_name %> <%= player.last_name %></h3>
+                    <p class="text-sm text-slate-400"><%= player.team %></p>
+                  </div>
+                </div>
+
+                <span class="status-badge <%= injury ? 'status-badge-active' : 'status-badge-clear' %>">
+                  <i class="fa-solid <%= injury ? 'fa-triangle-exclamation' : 'fa-check' %>"></i>
+                  <%= injury ? 'Reported' : 'Available' %>
+                </span>
+              </div>
+
+              <div class="rounded-2xl border border-white/10 bg-slate-950/55 p-4">
+                <% if (injury) { %>
+                <p class="text-sm font-semibold uppercase tracking-[0.25em] text-red-200"><%= injury.status %></p>
+                <p class="mt-3 text-sm leading-6 text-slate-300"><%= injury.shortComment || 'Injury note available in the detail popup.' %></p>
+                <% } else { %>
+                <p class="text-sm font-semibold uppercase tracking-[0.25em] text-emerald-200">Clear report</p>
+                <p class="mt-3 text-sm leading-6 text-slate-300">No injury was matched for this player in the current report feed.</p>
+                <% } %>
+              </div>
+
+              <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4 text-sm text-slate-400">
+                <span>Open injury snapshot</span>
+                <span class="font-semibold text-red-200">View details</span>
+              </div>
+            </div>
+          </article>
+          <% }) %>
+        </div>
+      </section>
+      <% } %>
     </div>
-    <% } %>
+  </main>
 
-  </div>
-    <script src="/js/main.js"></script>
+  <script src="/js/main.js"></script>
 <script src="/js/injuries.js"></script>
 
 </body>

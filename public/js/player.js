@@ -1,21 +1,32 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("✅ DOM fully loaded");
+  if (typeof gsap === "undefined") {
+    return;
+  }
 
-  // Animate header
-  gsap.from("#players-page h1", { opacity: 0, y: -20, duration: 0.8 });
+  gsap.from(".players-hero", {
+    opacity: 0,
+    y: 28,
+    duration: 0.85,
+    ease: "power2.out"
+  });
 
-  // Animate search form
-  gsap.from("form", { opacity: 0, y: -10, duration: 0.8, delay: 0.4 });
+  gsap.from(".player-search-panel", {
+    opacity: 0,
+    y: 18,
+    duration: 0.65,
+    delay: 0.15,
+    ease: "power2.out"
+  });
 
-  // Animate player cards only if they exist
   const cards = document.querySelectorAll(".player-card");
   if (cards.length > 0) {
     gsap.from(cards, {
-      opacity: 1,
-      y: 20,
+      opacity: 0,
+      y: 24,
       duration: 0.6,
-      delay: 0.6,
-      stagger: 0.1
+      delay: 0.25,
+      stagger: 0.08,
+      ease: "power2.out"
     });
   }
 });

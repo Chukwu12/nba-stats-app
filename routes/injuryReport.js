@@ -7,14 +7,19 @@ const { getInjuryData, getPlayerData } = require("../controllers/injury");
 // Regular injury report page
 router.get("/", async (req, res) => {
   try {
-    const players = await getPlayerData();
-    const injuries = await getInjuryData();
+    const [playersResult, injuriesResult] = await Promise.all([
+      getPlayerData(),
+      getInjuryData()
+    ]);
+
+    const pageError = playersResult.error || injuriesResult.error || null;
+
     res.render("injury-report", {
-      players,
-      injuries,
+      players: playersResult.players,
+      injuries: injuriesResult.injuries,
       searchResults: null,
       search: null,
-      error: null,
+      error: pageError,
     });
   } catch (err) {
     console.error("❌ Error in /injury-report:", err.message);
@@ -32,6 +37,16 @@ router.get("/", async (req, res) => {
 router.get("/search", async (req, res) => {
   const query = req.query.query;
   if (!query) return res.redirect("/injury-report");
+
+  if (!process.env.RAPIDAPI_KEY) {
+    return res.render("injury-report", {
+      players: [],
+      injuries: [],
+      searchResults: [],
+      search: query,
+      error: "RAPIDAPI_KEY is missing. Add it to your .env file to use injury search.",
+    });
+  }
 
   const options = {
     method: "GET",
@@ -60,13 +75,17 @@ router.get("/search", async (req, res) => {
       error: null,
     });
   } catch (err) {
-    console.error("❌ Search error:", err.message);
+    console.error("❌ Search error:", err.response?.status || err.message);
+    const errorMessage = err?.response?.status === 401
+      ? "Search API returned 401 Unauthorized. Check RAPIDAPI_KEY in .env."
+      : "Search failed. Try again.";
+
     res.render("injury-report", {
       players: [],
       injuries: [],
       searchResults: [],
       search: query,
-      error: "Search failed. Try again.",
+      error: errorMessage,
     });
   }
 });

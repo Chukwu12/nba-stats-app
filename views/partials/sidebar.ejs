@@ -1,70 +1,109 @@
 <!-- Sidebar Overlay for Mobile -->
-<div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden"></div>
+<div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-slate-950/70 backdrop-blur-sm md:hidden"></div>
+
+<% const currentPage = typeof activePage === 'undefined' ? '' : activePage; %>
+<%
+  const navSections = [
+    {
+      title: 'Main',
+      items: [
+        { href: '/', key: 'home', icon: 'fa-home', label: 'Home', accent: 'from-cyan-400 to-blue-500' },
+        { href: '/team-tracker', key: 'team-tracker', icon: 'fa-basketball-ball', label: 'Team Tracker', accent: 'from-orange-400 to-amber-400' }
+      ]
+    },
+    {
+      title: 'Data',
+      items: [
+        { href: '/players', key: 'players', icon: 'fa-user', label: 'Players', accent: 'from-sky-400 to-cyan-400' },
+        { href: '/injury-report', key: 'injury-report', icon: 'fa-notes-medical', label: 'Injury Report', accent: 'from-rose-400 to-orange-400' }
+      ]
+    },
+    {
+      title: 'Personal',
+      items: [
+        { href: '/favorite-player', key: 'favorite-player', icon: 'fa-star', label: 'Favorite Players', accent: 'from-amber-300 to-yellow-500', favorite: true }
+      ]
+    }
+  ];
+%>
 
 <!-- Sidebar -->
 <aside
   id="sidebar"
-  class="fixed top-0 left-0 z-40 h-full w-64 bg-gray-900 text-white
+  class="fixed top-0 left-0 z-40 flex h-full w-72 flex-col overflow-hidden border-r border-white/10 bg-slate-950/95 text-white shadow-2xl shadow-slate-950/40
          transform -translate-x-full transition-transform duration-300
          md:translate-x-0 md:static md:flex flex-col"
 >
-  <!-- Brand/Header -->
-  <div class="px-6 py-4 text-2xl font-bold border-b border-gray-700 flex items-center justify-between">
-    🏀 <span class="ml-2">NBA Tracker</span>
-    <!-- Mobile Close Button -->
-    <button id="sidebar-close" class="md:hidden text-gray-400 hover:text-white">
-      <i class="fas fa-times"></i>
-    </button>
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.18),_transparent_28%),radial-gradient(circle_at_bottom,_rgba(249,115,22,0.16),_transparent_24%)]"></div>
+
+  <div class="relative border-b border-white/10 px-6 pb-5 pt-6">
+    <div class="flex items-start justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-500 to-orange-400 text-xl text-slate-950 shadow-lg shadow-cyan-950/30">
+          <i class="fa-solid fa-basketball"></i>
+        </div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">Control Room</p>
+          <h2 class="mt-2 text-2xl font-bold tracking-tight text-white">NBA Tracker</h2>
+        </div>
+      </div>
+
+      <button id="sidebar-close" class="rounded-xl border border-white/10 bg-white/5 p-2 text-slate-400 transition hover:border-white/20 hover:bg-white/10 hover:text-white md:hidden">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="mt-5 rounded-[1.25rem] border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+      <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Game Day View</p>
+      <p class="mt-2 text-sm leading-6 text-slate-300">Jump between player data, injuries, favorites, and team snapshots from one cleaner navigation rail.</p>
+    </div>
   </div>
 
-  <!-- Navigation -->
-  <nav class="flex-1 px-4 py-6 space-y-6 text-sm">
-    
-    <!-- Main Section -->
-    <div>
-      <p class="px-4 mb-2 text-xs uppercase tracking-wider text-gray-400">
-        Main
-      </p>
-      <a href="/" class="sidebar-link <%= activePage === 'home' ? 'bg-blue-600 text-white shadow-lg' : '' %>">
-        <i class="fas fa-home w-5"></i>
-        <span>Home</span>
-      </a>
-      <a href="/team-tracker" class="sidebar-link <%= activePage === 'team-tracker' ? 'bg-blue-600 text-white shadow-lg' : '' %>">
-        <i class="fas fa-basketball-ball w-5"></i>
-        <span>Team Tracker</span>
-      </a>
-    </div>
+  <nav class="relative flex-1 space-y-8 overflow-y-auto px-4 py-6 text-sm">
+    <% navSections.forEach(section => { %>
+      <section>
+        <p class="px-3 text-[11px] font-semibold uppercase tracking-[0.35em] text-slate-500">
+          <%= section.title %>
+        </p>
 
-    <!-- Data Section -->
-    <div>
-      <p class="px-4 mb-2 text-xs uppercase tracking-wider text-gray-400">
-        Data
-      </p>
-      <a href="/players" class="sidebar-link <%= activePage === 'players' ? 'bg-blue-600 text-white shadow-lg' : '' %>">
-        <i class="fas fa-user w-5"></i>
-        <span>Players</span>
-      </a>
-      <a href="/injury-report" class="sidebar-link <%= activePage === 'injury-report' ? 'bg-blue-600 text-white shadow-lg' : '' %>">
-        <i class="fas fa-notes-medical w-5"></i>
-        <span>Injury Report</span>
-      </a>
-    </div>
-
-    <!-- Personal Section -->
-    <div>
-      <p class="px-4 mb-2 text-xs uppercase tracking-wider text-gray-400">
-        Personal
-      </p>
-      <a href="/favorite-player" class="sidebar-link <%= activePage === 'favorite-player' ? 'bg-yellow-500 text-black shadow-lg' : '' %>">
-        <i class="fa-solid fa-star w-5"></i>
-        <span>Favorite Players</span>
-      </a>
-    </div>
-
+        <div class="mt-3 space-y-2">
+          <% section.items.forEach(item => {
+              const isActive = currentPage === item.key;
+              const activeClasses = item.favorite
+                ? 'bg-gradient-to-r from-amber-300 to-yellow-500 text-slate-950 shadow-lg shadow-amber-950/20'
+                : 'bg-white/10 text-white shadow-lg shadow-slate-950/20 ring-1 ring-white/10';
+              const inactiveClasses = item.favorite
+                ? 'text-slate-200 hover:bg-white/8 hover:text-white'
+                : 'text-slate-300 hover:bg-white/8 hover:text-white';
+          %>
+            <a href="<%= item.href %>" class="sidebar-link group relative flex items-center gap-3 overflow-hidden rounded-2xl px-3 py-3.5 font-medium transition-all duration-200 <%= isActive ? activeClasses : inactiveClasses %>">
+              <span class="absolute inset-y-0 left-0 w-1 rounded-r-full bg-gradient-to-b <%= item.accent %> <%= isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100' %>"></span>
+              <span class="relative flex h-11 w-11 items-center justify-center rounded-2xl <%= isActive ? (item.favorite ? 'bg-black/10 text-slate-900' : 'bg-white/10 text-white') : 'bg-slate-900/80 text-slate-300 group-hover:bg-slate-800 group-hover:text-white' %>">
+                <i class="fas <%= item.icon %> w-5 text-center"></i>
+              </span>
+              <span class="relative flex-1 text-[15px]"><%= item.label %></span>
+              <span class="relative text-xs <%= isActive ? 'opacity-100' : 'opacity-0 transition-opacity group-hover:opacity-100' %>">
+                <i class="fa-solid fa-arrow-right"></i>
+              </span>
+            </a>
+          <% }) %>
+        </div>
+      </section>
+    <% }) %>
   </nav>
+
+  <div class="relative border-t border-white/10 px-4 py-4">
+    <div class="rounded-[1.25rem] border border-white/10 bg-slate-900/80 p-4">
+      <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Quick Pulse</p>
+      <div class="mt-3 flex items-center justify-between text-sm text-slate-300">
+        <span>League tools</span>
+        <span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-semibold text-emerald-300">Live</span>
+      </div>
+    </div>
+  </div>
 </aside>
 
 <!-- Mobile Toggle Button -->
-<button id="sidebar-toggle" class="fixed top-4 left-4 z-50 md:hidden p-2 bg-gray-900 text-white rounded shadow-lg">
+<button id="sidebar-toggle" class="fixed left-4 top-4 z-50 rounded-2xl border border-white/10 bg-slate-950/90 p-3 text-white shadow-xl shadow-slate-950/30 backdrop-blur md:hidden">
   <i class="fas fa-bars"></i>
 </button>

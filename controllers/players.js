@@ -1,9 +1,12 @@
 const axios = require("axios");
 const FavoritePlayer = require('../models/favoritePlayer');
+const mongoose = require('mongoose');
 
 // environment variable key
-// const BALDONTLIE_API_KEY = process.env.NBA_API_KEY;
+const NBA_API_KEY = process.env.NBA_API_KEY;
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
+
+const isDatabaseReady = () => mongoose.connection.readyState === 1;
 
 exports.searchPlayer = async (req, res) => {
   const name = req.query.name; // from GET /players/search?name=
@@ -109,7 +112,7 @@ exports.renderPlayerDetails = async (req, res) => {
     };
 
     // 3️⃣ Fetch player image from RapidAPI (optional)
-    let image = '/images/default-player.png';
+    let image = '/img/default.jpeg';
     try {
       const imageRes = await axios.get(`https://api-nba-v1.p.rapidapi.com/players/images?name=${player.first_name}%20${player.last_name}`, {
         headers: {
@@ -122,8 +125,8 @@ exports.renderPlayerDetails = async (req, res) => {
       console.warn("No image found for player:", player.first_name, player.last_name);
     }
 
-    const favorite = await FavoritePlayer.findOne({ playerId });
-    res.render('player-details', { player,  stats: stats || {}, image: image || '/img/default.jpeg', favorite, error: null });
+    const favorite = isDatabaseReady() ? await FavoritePlayer.findOne({ playerId }) : null;
+    res.render('player-details', { player, stats: stats || {}, image, favorite, error: null });
   } catch (err) {
     console.error("Error rendering player details:", err.message);
     res.render('player-details', { player: null, stats: null, image: null, favorite: null, error: 'Could not load player details' });

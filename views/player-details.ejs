@@ -7,103 +7,166 @@
   <title>
     <%= player?.first_name || 'Player' %> <%= player?.last_name || '' %> | NBA Stats
   </title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body class="bg-gray-100 text-gray-900 font-sans">
+<body class="players-shell bg-slate-950 text-slate-100">
+
+  <% 
+    const teamName = typeof player?.team === 'string'
+      ? player.team
+      : player?.team?.full_name || 'N/A';
+    const playerName = `${player?.first_name || 'Player'} ${player?.last_name || ''}`.trim();
+    const playerImage = image || '/img/default.jpeg';
+  %>
 
   <div class="flex min-h-screen">
     <%- include('partials/sidebar') %>
 
-    <main class="ml-64 flex-1 p-8 flex flex-col items-center">
+    <main class="player-page-main flex-1 px-4 pb-12 pt-20 md:px-8 md:pt-10">
+      <div class="mx-auto flex w-full max-w-7xl flex-col gap-8">
 
       <% if (error) { %>
-        <div class="bg-red-100 text-red-800 p-4 rounded-lg mb-6 shadow w-full max-w-2xl text-center">
+        <div class="rounded-3xl border border-red-400/30 bg-red-500/10 px-5 py-4 text-center text-red-100 shadow-lg shadow-red-950/20">
           <%= error %>
         </div>
       <% } %>
 
       <% if (player) { %>
-        <div class="max-w-4xl w-full bg-white p-8 rounded-xl shadow-lg flex flex-col md:flex-row gap-8">
+        <section class="player-details-hero overflow-hidden rounded-[2rem] border border-white/10 bg-white/8 p-6 shadow-2xl shadow-cyan-950/25 backdrop-blur md:p-10">
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.22),_transparent_25%),radial-gradient(circle_at_bottom_right,_rgba(249,115,22,0.16),_transparent_24%)]"></div>
+          <div class="relative grid gap-8 xl:grid-cols-[0.85fr_1.15fr] xl:items-start">
+            <div class="space-y-6">
+              <div class="rounded-[1.75rem] border border-white/10 bg-slate-950/55 p-5 shadow-xl shadow-slate-950/20">
+                <div class="overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-slate-900 via-slate-800 to-cyan-950 p-4">
+                  <img
+                    src="<%= playerImage %>"
+                    alt="<%= playerName %>"
+                    class="player-detail-image h-80 w-full rounded-[1.25rem] object-cover object-top"
+                    onerror="this.onerror=null;this.src='/img/default.jpeg';"
+                  />
+                </div>
+              </div>
 
-          <!-- Player Image -->
-          <img
-            src="<%='/img/default.jpeg' %>"
-            alt="<%= player?.first_name + ' ' + player?.last_name %>"
-            class="w-64 h-64 object-cover rounded-xl shadow-lg ring-4 ring-blue-200 mx-auto md:mx-0"
-          />
+              <div class="grid gap-4 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+                <article class="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                  <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Position</p>
+                  <p class="mt-3 text-2xl font-bold text-white"><%= player?.position || 'N/A' %></p>
+                </article>
+                <article class="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                  <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Team</p>
+                  <p class="mt-3 text-xl font-bold text-white"><%= teamName %></p>
+                </article>
+                <article class="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                  <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Jersey</p>
+                  <p class="mt-3 text-2xl font-bold text-white">#<%= player?.jersey_number || 'N/A' %></p>
+                </article>
+              </div>
+            </div>
 
-          <!-- Player Info -->
-          <div class="flex-1">
-            <h1 class="text-4xl font-bold mb-6 text-center md:text-left">
-              <%= player?.first_name %> <%= player?.last_name %>
-            </h1>
+            <div class="space-y-6">
+              <div class="space-y-4">
+                <a href="/players" class="inline-flex items-center gap-2 text-sm font-medium text-cyan-300 transition hover:text-cyan-200">
+                  <i class="fa-solid fa-arrow-left"></i>
+                  Back to Players
+                </a>
+                <span class="inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-cyan-200">
+                  <i class="fa-solid fa-chart-line"></i>
+                  Player Profile
+                </span>
+                <div>
+                  <h1 class="text-4xl font-bold tracking-tight text-white md:text-6xl"><%= playerName %></h1>
+                  <p class="mt-3 max-w-2xl text-base leading-7 text-slate-300">A streamlined profile with player metadata, season averages, and quick actions for tracking favorites.</p>
+                </div>
+              </div>
 
-            <ul class="bg-gray-50 p-6 rounded-lg shadow space-y-2">
-              <li><strong>Team:</strong> <%= player?.team || 'N/A' %></li>
-              <li><strong>Position:</strong> <%= player?.position || 'N/A' %></li>
-              <li><strong>Jersey:</strong> #<%= player?.jersey_number || 'N/A' %></li>
-              <li><strong>Height:</strong> <%= player?.height || 'N/A' %></li>
-              <li><strong>Weight:</strong> <%= player?.weight || 'N/A' %></li>
-              <li><strong>College:</strong> <%= player?.college || 'N/A' %></li>
-            </ul>
+              <div class="grid gap-4 md:grid-cols-2">
+                <div class="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                  <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Height</p>
+                  <p class="mt-3 text-2xl font-bold text-white"><%= player?.height || 'N/A' %></p>
+                </div>
+                <div class="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                  <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Weight</p>
+                  <p class="mt-3 text-2xl font-bold text-white"><%= player?.weight || 'N/A' %></p>
+                </div>
+                <div class="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5 md:col-span-2">
+                  <p class="text-xs uppercase tracking-[0.3em] text-slate-500">College</p>
+                  <p class="mt-3 text-2xl font-bold text-white"><%= player?.college || 'N/A' %></p>
+                </div>
+              </div>
 
-            <% if (player?.links && player.links[0]) { %>
-              <a href="<%= player.links[0].href %>" target="_blank" class="block mt-6 text-blue-600 hover:underline font-semibold">
-                View on ESPN →
-              </a>
-            <% } %>
+              <div class="flex flex-wrap items-center gap-4">
+                <% if (!favorite) { %>
+                  <form action="/favorite-player/addFavorite" method="POST">
+                    <input type="hidden" name="playerId" value="<%= player?.id %>">
+                    <input type="hidden" name="firstName" value="<%= player?.first_name %>">
+                    <input type="hidden" name="lastName" value="<%= player?.last_name %>">
+                    <input type="hidden" name="team" value="<%= teamName %>">
+                    <button
+                      type="submit"
+                      class="inline-flex items-center gap-2 rounded-2xl bg-amber-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-300"
+                    >
+                      <i class="fa-solid fa-star"></i>
+                      Add to Favorites
+                    </button>
+                  </form>
+                <% } else { %>
+                  <p class="inline-flex items-center gap-2 rounded-2xl border border-emerald-400/25 bg-emerald-500/10 px-5 py-3 font-semibold text-emerald-200">
+                    <i class="fa-solid fa-check"></i>
+                    Already in Favorites
+                  </p>
+                <% } %>
 
-            <a href="/players" class="block mt-4 text-blue-500 hover:underline">← Back to Players</a>
-
-            <% if (!favorite) { %>
-              <form action="/favorite-player/addFavorite" method="POST" class="mt-6">
-                <input type="hidden" name="playerId" value="<%= player?.id %>">
-                <input type="hidden" name="firstName" value="<%= player?.first_name %>">
-                <input type="hidden" name="lastName" value="<%= player?.last_name %>">
-                <input type="hidden" name="team" value="<%= player?.team %>">
-                <button 
-                  type="submit"
-                  class="bg-yellow-400 hover:bg-yellow-500 text-black px-6 py-2 rounded-lg transition flex items-center gap-2"
-                >
-                  <i class="fa-solid fa-star"></i> Add to Favorites
-                </button>
-              </form>
-            <% } else { %>
-              <p class="mt-6 text-green-600 font-semibold flex items-center gap-2">
-                <i class="fa-solid fa-check"></i> Already in Favorites
-              </p>
-            <% } %>
-
+                <% if (player?.links && player.links[0]) { %>
+                  <a href="<%= player.links[0].href %>" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-semibold text-slate-100 transition hover:border-cyan-400/30 hover:text-cyan-200">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    View on ESPN
+                  </a>
+                <% } %>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <!-- Player Stats -->
-        <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 max-w-4xl w-full">
-          <div class="bg-blue-50 rounded-xl p-4 text-center shadow">
-            <h3 class="text-3xl font-bold text-blue-600"><%= stats?.ppg || 'N/A' %></h3>
-            <p class="text-gray-600 font-medium">Points</p>
-          </div>
-          <div class="bg-green-50 rounded-xl p-4 text-center shadow">
-            <h3 class="text-3xl font-bold text-green-600"><%= stats?.apg || 'N/A' %></h3>
-            <p class="text-gray-600 font-medium">Assists</p>
-          </div>
-          <div class="bg-yellow-50 rounded-xl p-4 text-center shadow">
-            <h3 class="text-3xl font-bold text-yellow-600"><%= stats?.rpg || 'N/A' %></h3>
-            <p class="text-gray-600 font-medium">Rebounds</p>
-          </div>
+        <section class="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <article class="rounded-[1.75rem] border border-cyan-400/20 bg-cyan-400/10 p-6 shadow-xl shadow-cyan-950/15">
+            <p class="text-sm uppercase tracking-[0.3em] text-cyan-200">Points</p>
+            <h3 class="mt-4 text-5xl font-bold text-white"><%= stats?.ppg || 'N/A' %></h3>
+            <p class="mt-3 text-sm text-cyan-100/80">Average points per game.</p>
+          </article>
+          <article class="rounded-[1.75rem] border border-emerald-400/20 bg-emerald-400/10 p-6 shadow-xl shadow-emerald-950/15">
+            <p class="text-sm uppercase tracking-[0.3em] text-emerald-200">Assists</p>
+            <h3 class="mt-4 text-5xl font-bold text-white"><%= stats?.apg || 'N/A' %></h3>
+            <p class="mt-3 text-sm text-emerald-100/80">Average assists per game.</p>
+          </article>
+          <article class="rounded-[1.75rem] border border-amber-400/20 bg-amber-400/10 p-6 shadow-xl shadow-amber-950/15">
+            <p class="text-sm uppercase tracking-[0.3em] text-amber-200">Rebounds</p>
+            <h3 class="mt-4 text-5xl font-bold text-white"><%= stats?.rpg || 'N/A' %></h3>
+            <p class="mt-3 text-sm text-amber-100/80">Average rebounds per game.</p>
+          </article>
         </section>
       <% } %>
 
+      </div>
     </main>
   </div>
 
   <script>
-    gsap.from("h1", { opacity: 0, y: -30, duration: 1 });
-    gsap.from("ul li", { opacity: 0, y: 20, stagger: 0.1, duration: 0.5, delay: 0.3 });
+    gsap.from(".player-details-hero", { opacity: 0, y: 28, duration: 0.8, ease: "power2.out" });
+    gsap.from(".player-details-hero article, .player-details-hero form, .player-details-hero a, section article", {
+      opacity: 0,
+      y: 20,
+      stagger: 0.08,
+      duration: 0.45,
+      delay: 0.18,
+      ease: "power2.out"
+    });
   </script>
 
 </body>

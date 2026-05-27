@@ -6,54 +6,136 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NBA Players</title>
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body class="bg-gray-100 text-gray-900 font-sans">
+<body class="players-shell bg-slate-950 text-slate-100">
   <section class="flex min-h-screen">
     <%- include("partials/sidebar") %>
 
-    <div id="players-page" class="ml-64 p-6 w-full max-w-7xl mx-auto">
-      <h1 class="text-3xl font-bold mb-6">NBA Players</h1>
+    <main id="players-page" class="player-page-main flex-1 px-4 pb-12 pt-20 md:px-8 md:pt-10">
+      <div class="mx-auto w-full max-w-7xl space-y-8">
+        <section class="players-hero overflow-hidden rounded-[2rem] border border-white/10 bg-white/8 p-6 shadow-2xl shadow-cyan-950/30 backdrop-blur md:p-10">
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(56,189,248,0.25),_transparent_30%),radial-gradient(circle_at_bottom_left,_rgba(249,115,22,0.18),_transparent_28%)]"></div>
+          <div class="relative grid gap-8 lg:grid-cols-[1.4fr_0.9fr] lg:items-end">
+            <div class="space-y-5">
+              <span class="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-cyan-200">
+                <i class="fa-solid fa-basketball"></i>
+                League Directory
+              </span>
+              <div class="space-y-3">
+                <h1 class="text-4xl font-bold tracking-tight text-white md:text-6xl">Explore the league’s player landscape.</h1>
+                <p class="max-w-2xl text-base leading-7 text-slate-300 md:text-lg">Search the roster, jump into player profiles, and scan role, team, and season averages from a cleaner interface built for quick browsing.</p>
+              </div>
 
-      <!-- Search -->
-      <form action="/players/search" method="get" class="mb-6 flex flex-col sm:flex-row items-center gap-3">
-        <input type="text" name="search" placeholder="Search players..." class="h-[40px] flex-1 border border-gray-300 rounded px-4 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" value="<%= search || '' %>">
-        <button type="submit" class="bg-blue-600 text-white px-5 py-3 rounded hover:bg-blue-700 transition font-semibold">
-          Search
-        </button>
-      </form>
+              <form action="/players" method="get" class="player-search-panel flex flex-col gap-3 rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-3 sm:flex-row sm:items-center sm:p-4">
+                <label for="player-search" class="sr-only">Search players</label>
+                <div class="flex flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-white/6 px-4 py-3">
+                  <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+                  <input id="player-search" type="text" name="search" placeholder="Search by player name" class="w-full border-0 bg-transparent p-0 text-base text-white placeholder:text-slate-500 focus:outline-none focus:ring-0" value="<%= search || '' %>">
+                </div>
+                <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-cyan-400 px-5 py-3 font-semibold text-slate-950 transition hover:bg-cyan-300">
+                  <span>Search</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </form>
+            </div>
 
-      <!-- Player Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  <% players.forEach(player => { %>
-    <a href="/players/<%= player.id %>" class="player-card group block bg-white border border-gray-200 rounded-lg shadow hover:shadow-xl transition p-6">
-      <div class="flex items-center gap-4">
-        <img src="<%='/img/default.jpeg' %>" alt="<%= player.first_name || player.last_name %>" class="w-20 h-20 rounded-full object-cover border-2 border-blue-500 group-hover:scale-105 transition" />
+            <div class="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+              <article class="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                <p class="text-sm font-medium uppercase tracking-[0.25em] text-slate-400">Results</p>
+                <p class="mt-3 text-4xl font-bold text-white"><%= players.length %></p>
+                <p class="mt-2 text-sm text-slate-400">Players currently shown in this view.</p>
+              </article>
+              <article class="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                <p class="text-sm font-medium uppercase tracking-[0.25em] text-slate-400">Focus</p>
+                <p class="mt-3 text-2xl font-bold text-white"><%= search ? search : 'League-wide' %></p>
+                <p class="mt-2 text-sm text-slate-400">Active search scope for the directory.</p>
+              </article>
+              <article class="rounded-[1.5rem] border border-white/10 bg-slate-950/55 p-5">
+                <p class="text-sm font-medium uppercase tracking-[0.25em] text-slate-400">Flow</p>
+                <p class="mt-3 text-2xl font-bold text-white">Profiles</p>
+                <p class="mt-2 text-sm text-slate-400">Open any card to view stats, profile data, and favorites.</p>
+              </article>
+            </div>
+          </div>
+        </section>
 
-        <div>
-          <p class="text-sm text-gray-600">Position: <%= player.position || 'N/A' %></p>
-          
-         <% 
-            let teamName = 'Free Agent';
-            if (typeof player.team === 'string') {
-              teamName = player.team;
-            } else if (player.team && player.team.full_name) {
-              teamName = player.team.full_name;
-            }
-          %>
-          <p class="text-sm text-gray-600">Team: <%= teamName %></p>
+        <% if (error) { %>
+          <div class="rounded-3xl border border-red-400/30 bg-red-500/10 px-5 py-4 text-red-100 shadow-lg shadow-red-950/20">
+            <%= error %>
+          </div>
+        <% } %>
 
-          <h2 class="text-xl font-bold text-blue-800"><%= player.first_name %> <%= player.last_name %></h2>
-        </div>
+        <% if (!players || players.length === 0) { %>
+          <section class="rounded-[2rem] border border-dashed border-white/15 bg-white/5 px-6 py-16 text-center shadow-xl shadow-slate-950/30">
+            <div class="mx-auto flex max-w-xl flex-col items-center gap-4">
+              <span class="flex h-16 w-16 items-center justify-center rounded-full bg-cyan-400/10 text-cyan-300">
+                <i class="fa-solid fa-user-group text-2xl"></i>
+              </span>
+              <h2 class="text-3xl font-bold text-white">No players found</h2>
+              <p class="text-base leading-7 text-slate-400">Try a different name or clear the search to browse the current directory.</p>
+            </div>
+          </section>
+        <% } else { %>
+          <section class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <% players.forEach(player => { %>
+              <% 
+                let teamName = 'Free Agent';
+                if (typeof player.team === 'string' && player.team) {
+                  teamName = player.team;
+                } else if (player.team && player.team.full_name) {
+                  teamName = player.team.full_name;
+                }
+
+                const initials = `${(player.first_name || '').charAt(0)}${(player.last_name || '').charAt(0)}` || 'NBA';
+              %>
+              <a href="/players/<%= player.id %>" class="player-card group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/8 p-6 shadow-xl shadow-slate-950/20 backdrop-blur transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40 hover:shadow-cyan-950/30">
+                <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-400 via-blue-400 to-orange-400 opacity-70"></div>
+                <div class="relative flex h-full flex-col gap-6">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                      <div class="player-avatar-ring flex h-20 w-20 items-center justify-center rounded-3xl bg-slate-900/80 text-2xl font-bold text-cyan-200 shadow-lg shadow-cyan-950/20">
+                        <%= initials %>
+                      </div>
+                      <div class="space-y-1">
+                        <p class="text-sm font-medium uppercase tracking-[0.25em] text-slate-400"><%= player.position || 'Utility' %></p>
+                        <h2 class="text-2xl font-bold leading-tight text-white"><%= player.first_name %> <%= player.last_name %></h2>
+                        <p class="text-sm text-slate-400"><%= teamName %></p>
+                      </div>
+                    </div>
+                    <span class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/6 text-slate-300 transition group-hover:bg-cyan-400 group-hover:text-slate-950">
+                      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </span>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3 text-sm text-slate-300">
+                    <div class="rounded-2xl border border-white/10 bg-slate-950/55 p-4">
+                      <p class="text-xs uppercase tracking-[0.25em] text-slate-500">Position</p>
+                      <p class="mt-2 text-lg font-semibold text-white"><%= player.position || 'N/A' %></p>
+                    </div>
+                    <div class="rounded-2xl border border-white/10 bg-slate-950/55 p-4">
+                      <p class="text-xs uppercase tracking-[0.25em] text-slate-500">Team</p>
+                      <p class="mt-2 text-lg font-semibold text-white"><%= teamName %></p>
+                    </div>
+                  </div>
+
+                  <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4 text-sm text-slate-400">
+                    <span>Open player profile</span>
+                    <span class="font-semibold text-cyan-300">View details</span>
+                  </div>
+                </div>
+              </a>
+            <% }) %>
+          </section>
+        <% } %>
       </div>
-    </a>
-  <% }) %>
-</div>
-
-    </div>
+    </main>
   </section>
    <!-- Load GSAP first -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
