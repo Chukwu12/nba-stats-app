@@ -1,61 +1,93 @@
-## Basketball Team Project
-This project is a web application for displaying information about NBA basketball teams.
+# NBA Stats App
 
-### Table of Contents
-Description
-Features
-Technologies Used
-Setup and Installation
-Usage
-Contributing
+<p align="center">
+	<img src="public/img/basketball-img.jpg" alt="NBA Stats App icon" width="120" />
+</p>
 
+<p align="center">
+	<a href="#"><img alt="Node.js" src="https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white"></a>
+	<a href="#"><img alt="Express" src="https://img.shields.io/badge/Express-4.x-000000?logo=express&logoColor=white"></a>
+	<a href="#"><img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-Database-47A248?logo=mongodb&logoColor=white"></a>
+	<a href="#"><img alt="EJS" src="https://img.shields.io/badge/View-EJS-B4CA65"></a>
+	<a href="#"><img alt="Tailwind CSS" src="https://img.shields.io/badge/TailwindCSS-4.x-06B6D4?logo=tailwindcss&logoColor=white"></a>
+	<a href="https://opensource.org/license/isc-license-txt"><img alt="License: ISC" src="https://img.shields.io/badge/License-ISC-blue.svg"></a>
+	<a href="https://render.com/"><img alt="Deploy on Render" src="https://img.shields.io/badge/Deploy-Render-46E3B7?logo=render&logoColor=000000"></a>
+</p>
 
-### Description
-The Basketball Team Project is a web application built using Express.js and MongoDB to display information about NBA basketball teams. It allows users to view details such as team names, championships, the player with the most three-pointers, and the team's best record. 
-Additionally, users can search for specific teams and add new teams to the database.
+A full-stack NBA tracker where users can browse teams and players, view injury and player details, and save favorite players.
 
-### Features
-View a list of NBA basketball teams
-Search for specific teams
-Add new teams to the database
-Display team details including championships, the player with the most three-pointers, and the team's best record
+## Highlights
 
-### Technologies Used
-Node.js
-Express.js
-MongoDB
-EJS (Embedded JavaScript)
-HTML
-CSS
+- Browse NBA teams and player information.
+- View details such as championships, key player stats, and team records.
+- Search and track data quickly from the UI.
+- Save favorite players for quick access.
+- Server-rendered pages with EJS for a fast, simple UX.
 
-### Setup and Installation
-1.Clone the repository:
+## Tech Stack
+
+- Node.js
+- Express.js
+- MongoDB + Mongoose
+- EJS
+- Tailwind CSS
+- Vanilla JavaScript
+
+## Project Structure
+
+```text
+config/        Database connection setup
+controllers/   Route controller logic
+models/        Mongoose models
+public/        Static assets (CSS, JS, images)
+routes/        Express route definitions
+views/         EJS templates and partials
+server.js      App entry point
+```
+
+## Getting Started
+
+### 1. Clone and install
+
+```bash
 git clone <repository-url>
-<br>
-2.Navigate to the project directory:
-cd basketball-team-project
-<br>
-3. Install dependencies:
+cd nba-stats-app
 npm install
-<br>
-4.Set up environment variables:Create a .env file in the project root directory and add the following:
+```
+
+### 2. Create environment variables
+
+Create a `.env` file in the project root:
+
+```env
 DB_STRING=<your-mongodb-connection-string>
-<br>
-5. Start the server:
+```
+
+### 3. Run the app
+
+```bash
 npm start
-<br>
-6. Access the application in your web browser at http://localhost:2121
+```
 
-### Usage
-Navigate to the homepage to view a list of NBA basketball teams.
-Use the search feature to find specific teams.
-Add new teams by submitting the team name, championships, the player with the most three-pointers, and the team's best record.
+For development with auto-reload:
 
-### Contributing
-Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
+```bash
+npm run dev
+```
 
-Fork the repository.
-Create a new branch for your feature or enhancement.
-Make your changes.
-Test your changes thoroughly.
-Submit a pull request detailing the changes you've made.
+Open http://localhost:2121 in your browser.
+
+## Available Scripts
+
+- `npm start` - Start the server
+- `npm run dev` - Start with nodemon
+- `npm run build:css` - Build/watch Tailwind output
+
+## Contributing
+
+Contributions are welcome.
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Commit your changes.
+4. Open a pull request.
